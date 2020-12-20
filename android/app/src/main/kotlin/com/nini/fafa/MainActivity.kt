@@ -31,15 +31,15 @@ class MainActivity : FlutterActivity() {
             Hover.initialize(this)
             Hover.setBranding(s199, R.drawable.kakwetu, this)
             GeneratedPluginRegistrant.registerWith(flutterEngine)
-            // window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-            // window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             if (!context.getPackageName().equals("com.nini.fafa")) {
                 this.finish()
                 Process.killProcess(Process.myPid())
             }
-           // if (!setSecureSurfaceView()) {
-           //     Log.e("MainActivity", "Could not secure the MainActivity!")
-           // }
+           if (!setSecureSurfaceView()) {
+               Log.e("MainActivity", "Could not secure the MainActivity!")
+           }
             MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call: MethodCall, result: MethodChannel.Result? ->
                 val arguments = call.arguments<Map<String, Any>>()
                 val phone = arguments[s299] as String?
