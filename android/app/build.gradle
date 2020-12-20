@@ -13,7 +13,7 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) { 
-    flutterVersionCode = '4'
+    flutterVersionCode = '5'
 }
 
 def releaseTime() {
@@ -60,7 +60,7 @@ android {
         applicationId "com.nini.fafa"
         minSdkVersion 18
         targetSdkVersion 30
-        versionCode 4
+        versionCode 5
         versionName "1.0.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resConfigs "en", "fr"
