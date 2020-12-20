@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:dropdownfield/dropdownfield.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -103,7 +102,7 @@ class Myform extends StatefulWidget {
 class _MyformState extends State<Myform> {
   TextEditingController droppays = new TextEditingController();
   List<String> pays = [];
-  StreamController<List> _streamcontroller=StreamController<List>();
+  StreamController<List> _streamcontroller = StreamController<List>();
   @override
   void initState() {
     selectpays();
@@ -116,15 +115,17 @@ class _MyformState extends State<Myform> {
     pays.clear();
     super.dispose();
   }
-static _isolate(String body){
-return jsonDecode(body);
+
+  static _isolate(String body) {
+    return jsonDecode(body);
   }
+
   selectpays() async {
     try {
-      final response =
-          await http.get("https://kakwetuburundifafanini.com/pays/selectpays.php");
-            var resultat=await compute(_isolate,response.body);
-     setState(() {
+      final response = await http
+          .get("https://kakwetuburundifafanini.com/pays/selectpays.php");
+      var resultat = await compute(_isolate, response.body);
+      setState(() {
         for (int i = 0; i < resultat.length; i++) {
           setState(() {
             pays.add(resultat[i]['nom']);
@@ -145,21 +146,40 @@ return jsonDecode(body);
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         StreamBuilder<List>(
-            stream:_streamcontroller.stream,
+            stream: _streamcontroller.stream,
             builder: (context, snap) {
               if (snap.hasError) {
                 return null;
               } else if (snap.hasData) {
                 return Padding(
-                  padding: const EdgeInsets.all(2),
+                  padding: const EdgeInsets.only(left: 15, right: 15),
                   child: Card(
-                    color: Colors.amber,
+                    color: Colors.green,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Colors.lightBlue, width: 2),
+                        side: BorderSide(color: Colors.red, width: 3),
                         borderRadius: BorderRadius.circular(15)),
-                    child: DropDownField(
-                      onValueChanged: (v) {
+                    child: DropdownButtonFormField(
+                      autofocus: false,
+                      autovalidate: false,
+                      isDense: true,
+                      isExpanded: true,
+                      dropdownColor: Colors.black,
+                      items: snap.data.map((e) {
+                        return DropdownMenuItem(
+                          child: Center(
+                            child: new Text(
+                              e,
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
+                          ),
+                          value: e,
+                        );
+                      }).toList(),
+                      onChanged: (v) {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -169,22 +189,19 @@ return jsonDecode(body);
                                       pays: v,
                                     )));
                       },
-                      controller: droppays,
-                      textStyle: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
-                      labelText: widget.l.fra == 1
-                          ? "Pays"
-                          : widget.l.eng == 1
-                              ? "Country"
-                              : widget.l.swa == 1
-                                  ? "Nchi"
-                                  : "Igihugu",
-                      labelStyle: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 20,
-                          fontStyle: FontStyle.italic),
-                      strict: false,
-                      items: pays,
+                      hint: Center(
+                        child: Text(
+                          widget.l.fra == 1
+                              ? "Dans quel Pays ?"
+                              : widget.l.eng == 1
+                                  ? "In Which Country ?"
+                                  : widget.l.swa == 1
+                                      ? "Nchi gani ?"
+                                      : "Ikihe gihugu ?",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
                   ),
                 );

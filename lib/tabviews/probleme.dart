@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kakwetu/page3.dart';
 import '../servicepayement.dart';
 import 'package:flutter/foundation.dart';
+
 class Probleme extends StatefulWidget {
   final Langue l;
   final String numero;
@@ -40,28 +41,30 @@ class _ProblemeState extends State<Probleme> {
   StreamController<List> _streamcontroller = StreamController<List>();
   ScrollController _scrollcontroller1 = new ScrollController();
   ScrollController _scrollcontroller = new ScrollController();
-    TextEditingController resultat1 = new TextEditingController();
+  TextEditingController resultat1 = new TextEditingController();
   bool ispop = true;
   FocusNode focusnode;
   FocusNode focusnode1;
   @override
   void initState() {
-    focusnode=FocusNode();
-    focusnode1=FocusNode();
-    focusnode.addListener(() { });
-    focusnode1.addListener(() { });
+    focusnode = FocusNode();
+    focusnode1 = FocusNode();
+    focusnode.addListener(() {});
+    focusnode1.addListener(() {});
     selectproblem();
     selectstock();
-    _timer = Timer.periodic(const Duration(seconds:5), (timer) {
-    selectproblem();
-    selectstock();
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      selectproblem();
+      selectstock();
     });
     super.initState();
   }
- dismisskeyboard(){
-  focusnode.unfocus();
-  focusnode1.unfocus();
-}
+
+  dismisskeyboard() {
+    focusnode.unfocus();
+    focusnode1.unfocus();
+  }
+
   @override
   void dispose() {
     focusnode1.dispose();
@@ -83,20 +86,21 @@ class _ProblemeState extends State<Probleme> {
 
   final _formKey = GlobalKey<FormState>();
   var stock = [];
-  var  probleme = [];
-   static _isolate(String body){
-return jsonDecode(body);
+  var probleme = [];
+  static _isolate(String body) {
+    return jsonDecode(body);
   }
-selectstock() async {
+
+  selectstock() async {
     try {
       final response = await http
           .post("https://kakwetuburundifafanini.com/gs/selectstock.php", body: {
         "nro": widget.numero,
       });
-      var resultat=await compute(_isolate,response.body);
+      var resultat = await compute(_isolate, response.body);
       setState(() {
-      _streamcontroller1.add(resultat);
-        stock =resultat;
+        _streamcontroller1.add(resultat);
+        stock = resultat;
       });
     } catch (e) {
       setState(() {
@@ -104,25 +108,27 @@ selectstock() async {
       });
     }
   }
- selectproblem() async {
+
+  selectproblem() async {
     try {
       final response = await http.post(
           "https://kakwetuburundifafanini.com/gp/selectproblem.php",
           body: {
             "nro": widget.numero,
           });
-      var resultat=await compute(_isolate,response.body);
+      var resultat = await compute(_isolate, response.body);
       setState(() {
-    _streamcontroller.add(resultat);
-        probleme =resultat;
+        _streamcontroller.add(resultat);
+        probleme = resultat;
       });
     } catch (e) {
       setState(() {
-         probleme = [];
+        probleme = [];
       });
     }
   }
-firstcheckprobleme(){
+
+  firstcheckprobleme() {
     setState(() {
       ispop = false;
       visible1 = true;
@@ -133,7 +139,7 @@ firstcheckprobleme(){
           (double.parse(qte.text) > 0) &&
           (double.parse(add.text) >= 0) &&
           (double.parse(resultat1.text) >= double.parse(qte.text))) {
-    http.post(
+        http.post(
             "https://kakwetuburundifafanini.com/fpr/firstcheckprobleme.php",
             body: {
               "ajout": add.text.trim().replaceAll(' ', ''),
@@ -142,36 +148,36 @@ firstcheckprobleme(){
               "qte": qte.text.trim().replaceAll(' ', ''),
               "nom_p": name1.text.trim().replaceAll(' ', ''),
               "q_encien": qte.text.trim().replaceAll(' ', ''),
-            }).then((value){
-          if(value.statusCode==200){
-             Fluttertoast.showToast(
-              msg: widget.l.fra == 1
-                  ? "Bien Fait"
-                  : widget.l.eng == 1
-                      ? "Done"
-                      : widget.l.swa == 1
-                          ? "Umeweza"
-                          : "Vyakunze",
-              backgroundColor: Colors.black,
-              gravity: ToastGravity.CENTER,
-              toastLength: Toast.LENGTH_LONG);
-              selectproblem();
-              selectstock();
-          }else{
+            }).then((value) {
+          if (value.statusCode == 200) {
             Fluttertoast.showToast(
-              msg: widget.l.fra == 1
-                  ? "Operation Echouée"
-                  : widget.l.eng == 1
-                      ? "Failed"
-                      : widget.l.swa == 1
-                          ? "Bimekatala"
-                          : "Ntivyakunze",
-              backgroundColor: Colors.red,
-              gravity: ToastGravity.CENTER,
-              toastLength: Toast.LENGTH_LONG);
+                msg: widget.l.fra == 1
+                    ? "Bien Fait"
+                    : widget.l.eng == 1
+                        ? "Done"
+                        : widget.l.swa == 1
+                            ? "Umeweza"
+                            : "Vyakunze",
+                backgroundColor: Colors.black,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
+            selectproblem();
+            selectstock();
+          } else {
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Operation Echouée"
+                    : widget.l.eng == 1
+                        ? "Failed"
+                        : widget.l.swa == 1
+                            ? "Bimekatala"
+                            : "Ntivyakunze",
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
           }
         });
-            setState(() {
+        setState(() {
           add.text = "";
           qte.text = "";
           name1.text = "";
@@ -218,13 +224,12 @@ firstcheckprobleme(){
     }
   }
 
-deleteprobleme(String nom1, String nom2, String date){
+  deleteprobleme(String nom1, String nom2, String date) {
     setState(() {
       ispop = false;
     });
     try {
-     http.post(
-          "https://kakwetuburundifafanini.com/dpr/deleteprobleme.php",
+      http.post("https://kakwetuburundifafanini.com/dpr/deleteprobleme.php",
           body: {
             "nom_p": nom1,
             "nom_g": nom2,
@@ -335,8 +340,7 @@ deleteprobleme(String nom1, String nom2, String date){
                   fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
               textAlign: TextAlign.center)
           : widget.l.eng == 1
-              ? Text(
-                  "Your Packet has Finished Do you want to pay once again ?",
+              ? Text("Your Packet has Finished Do you want to pay once again ?",
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -595,7 +599,7 @@ deleteprobleme(String nom1, String nom2, String date){
                       });
                     }
                   } else {
-                 firstcheckprobleme();
+                    firstcheckprobleme();
                   }
                 } else {
                   setState(() {
@@ -679,7 +683,7 @@ deleteprobleme(String nom1, String nom2, String date){
     //return;
   }
 
-  void messagevalidersuppression(String nomp, String nomg, String date,int i) {
+  void messagevalidersuppression(String nomp, String nomg, String date, int i) {
     AlertDialog alerte = new AlertDialog(
       backgroundColor: Colors.black,
       content: widget.l.fra == 1
@@ -807,7 +811,7 @@ deleteprobleme(String nom1, String nom2, String date){
 
   _scrolldown() {
     _scrollcontroller.animateTo(_scrollcontroller.position.maxScrollExtent,
-        duration: Duration(seconds: stock.isEmpty ? 1 :stock.length*2),
+        duration: Duration(seconds: stock.isEmpty ? 1 : stock.length * 2),
         curve: Curves.easeOut);
     setState(() {
       _isontop = false;
@@ -825,7 +829,7 @@ deleteprobleme(String nom1, String nom2, String date){
 
   _scrolldown1() {
     _scrollcontroller1.animateTo(_scrollcontroller1.position.maxScrollExtent,
-        duration: Duration(seconds:probleme.isEmpty ? 1 :probleme.length*2),
+        duration: Duration(seconds: probleme.isEmpty ? 1 : probleme.length * 2),
         curve: Curves.easeOut);
     setState(() {
       _isontop1 = false;
@@ -866,10 +870,7 @@ deleteprobleme(String nom1, String nom2, String date){
       actions: <Widget>[
         MaterialButton(
           onPressed: () {
-            setState(() {
-              ispop = true;
-              Navigator.pop(context);
-            });
+            Navigator.pop(context);
           },
           child: widget.l.fra == 1
               ? Text("Non",
@@ -901,11 +902,8 @@ deleteprobleme(String nom1, String nom2, String date){
         ),
         MaterialButton(
           onPressed: () {
-            setState(() {
-              ispop = true;
-              Navigator.pop(context);
-              Navigator.pop(context);
-            });
+            Navigator.pop(context);
+            Navigator.pop(context);
           },
           child: widget.l.fra == 1
               ? Text("Oui",
@@ -955,8 +953,10 @@ deleteprobleme(String nom1, String nom2, String date){
       onWillPop: () {
         if (ispop) {
           messagevalidation1();
+        } else {
+          return _willpop();
         }
-        return _willpop();
+        return null;
       },
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1058,8 +1058,7 @@ deleteprobleme(String nom1, String nom2, String date){
                                 child: ListView.builder(
                                     controller: _scrollcontroller1,
                                     physics: BouncingScrollPhysics(),
-                                    itemCount:
-                                        snap.data.length,
+                                    itemCount: snap.data.length,
                                     itemBuilder: (context, i) {
                                       return InkWell(
                                         splashColor: Colors.white,
@@ -1096,8 +1095,7 @@ deleteprobleme(String nom1, String nom2, String date){
                                                                   '2'
                                                               ? Text("Lundi le " + snap.data[i]['dat'] + " : ",
                                                                   style: TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight.bold,
+                                                                      fontWeight: FontWeight.bold,
                                                                       color: Colors.white))
                                                               : snap.data[i]['jour'].toString() == '3'
                                                                   ? Text("Mardi le " + snap.data[i]['dat'] + " : ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))
@@ -1179,7 +1177,8 @@ deleteprobleme(String nom1, String nom2, String date){
                                                         : widget.l.swa == 1
                                                             ? Text(
                                                                 "Vyenye tatizo: " +
-                                                                    snap.data[i][
+                                                                    snap.data[i]
+                                                                        [
                                                                         'nom_p'],
                                                                 style:
                                                                     TextStyle(
@@ -1192,7 +1191,8 @@ deleteprobleme(String nom1, String nom2, String date){
                                                               )
                                                             : Text(
                                                                 "Ibifise ikibazo: " +
-                                                                    snap.data[i][
+                                                                    snap.data[i]
+                                                                        [
                                                                         'nom_p'],
                                                                 style:
                                                                     TextStyle(
@@ -1288,7 +1288,8 @@ deleteprobleme(String nom1, String nom2, String date){
                                                         : widget.l.swa == 1
                                                             ? Text(
                                                                 "Vizuri: " +
-                                                                    snap.data[i][
+                                                                    snap.data[i]
+                                                                        [
                                                                         'nom_g'],
                                                                 style:
                                                                     TextStyle(
@@ -1301,7 +1302,8 @@ deleteprobleme(String nom1, String nom2, String date){
                                                               )
                                                             : Text(
                                                                 "Ibimeze neza: " +
-                                                                    snap.data[i][
+                                                                    snap.data[i]
+                                                                        [
                                                                         'nom_g'],
                                                                 style:
                                                                     TextStyle(
@@ -1343,7 +1345,8 @@ deleteprobleme(String nom1, String nom2, String date){
                                                         : widget.l.swa == 1
                                                             ? Text(
                                                                 "Aliyo ongeza: " +
-                                                                    snap.data[i][
+                                                                    snap.data[i]
+                                                                        [
                                                                         'ajout'],
                                                                 style:
                                                                     TextStyle(
@@ -1356,7 +1359,8 @@ deleteprobleme(String nom1, String nom2, String date){
                                                               )
                                                             : Text(
                                                                 "Ayongewe: " +
-                                                                    snap.data[i][
+                                                                    snap.data[i]
+                                                                        [
                                                                         'ajout'],
                                                                 style:
                                                                     TextStyle(
@@ -1379,11 +1383,10 @@ deleteprobleme(String nom1, String nom2, String date){
                                                     ),
                                                     onPressed: () {
                                                       messagevalidersuppression(
-                                                        snap.data[i]['nom_p'],
-                                                        snap.data[i]['nom_g'],
-                                                        snap.data[i]['dat'],
-                                                        i
-                                                      );
+                                                          snap.data[i]['nom_p'],
+                                                          snap.data[i]['nom_g'],
+                                                          snap.data[i]['dat'],
+                                                          i);
                                                     }),
                                               )
                                             ],
@@ -1437,7 +1440,7 @@ deleteprobleme(String nom1, String nom2, String date){
                                 child: ListView.builder(
                                     controller: _scrollcontroller,
                                     physics: BouncingScrollPhysics(),
-                                    itemCount:snap.data.length,
+                                    itemCount: snap.data.length,
                                     itemBuilder: (context, i) {
                                       return InkWell(
                                         splashColor: Colors.white,
@@ -1449,7 +1452,9 @@ deleteprobleme(String nom1, String nom2, String date){
                                         },
                                         onTap: () {
                                           setState(() {
-                                            resultat1.text = (snap.data[i]['q_encien']).toString();
+                                            resultat1.text = (snap.data[i]
+                                                    ['q_encien'])
+                                                .toString();
                                           });
                                           if (name1.text.isEmpty) {
                                             setState(() {
@@ -1517,7 +1522,8 @@ deleteprobleme(String nom1, String nom2, String date){
                                                         : widget.l.swa == 1
                                                             ? Text(
                                                                 "Hisa:" +
-                                                                    snap.data[i][
+                                                                    snap.data[i]
+                                                                        [
                                                                         'q_encien'],
                                                                 style: TextStyle(
                                                                     fontWeight:
@@ -1528,7 +1534,8 @@ deleteprobleme(String nom1, String nom2, String date){
                                                               )
                                                             : Text(
                                                                 "Sitoke:" +
-                                                                    snap.data[i][
+                                                                    snap.data[i]
+                                                                        [
                                                                         'q_encien'],
                                                                 style: TextStyle(
                                                                     fontWeight:
@@ -1596,10 +1603,15 @@ deleteprobleme(String nom1, String nom2, String date){
                                   child: InkWell(
                                     splashColor: Colors.white,
                                     onTap: () {
-                                  showSearch(
-          context: context,
-          delegate:
-              DataSearch1(name1, name2, context, widget.l,stock, resultat1));
+                                      showSearch(
+                                          context: context,
+                                          delegate: DataSearch1(
+                                              name1,
+                                              name2,
+                                              context,
+                                              widget.l,
+                                              stock,
+                                              resultat1));
                                     },
                                     child: Row(
                                       mainAxisAlignment:
@@ -1700,9 +1712,10 @@ deleteprobleme(String nom1, String nom2, String date){
                                     controller: qte,
                                     keyboardType:
                                         TextInputType.numberWithOptions(),
-                                        inputFormatters: [
-                                    new FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
-                                  ],
+                                    inputFormatters: [
+                                      new FilteringTextInputFormatter.allow(
+                                          RegExp("[0-9.]"))
+                                    ],
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.center,
@@ -1803,9 +1816,10 @@ deleteprobleme(String nom1, String nom2, String date){
                                     controller: add,
                                     keyboardType:
                                         TextInputType.numberWithOptions(),
-                                        inputFormatters: [
-                                    new FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
-                                  ],
+                                    inputFormatters: [
+                                      new FilteringTextInputFormatter.allow(
+                                          RegExp("[0-9.]"))
+                                    ],
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.center,
@@ -1862,11 +1876,11 @@ deleteprobleme(String nom1, String nom2, String date){
                                 ),
                               ),
                               Visibility(
-                              visible:false,
-                             child: TextFormField(
-                                controller:resultat1,
+                                visible: false,
+                                child: TextFormField(
+                                  controller: resultat1,
+                                ),
                               ),
-                            ),
                               InkWell(
                                 splashColor: Colors.white,
                                 onTap: () {
@@ -2079,10 +2093,15 @@ deleteprobleme(String nom1, String nom2, String date){
                               InkWell(
                                 splashColor: Colors.white,
                                 onTap: () {
-                              showSearch(
-          context: context,
-          delegate: DataSearch2(context, widget.l, widget.numero, widget.duree,
-              probleme, widget.isboss));
+                                  showSearch(
+                                      context: context,
+                                      delegate: DataSearch2(
+                                          context,
+                                          widget.l,
+                                          widget.numero,
+                                          widget.duree,
+                                          probleme,
+                                          widget.isboss));
                                 },
                                 child: Padding(
                                     padding: const EdgeInsets.only(
@@ -2145,7 +2164,7 @@ deleteprobleme(String nom1, String nom2, String date){
 class DataSearch1 extends SearchDelegate<String> {
   TextEditingController nom = new TextEditingController();
   TextEditingController nom2 = new TextEditingController();
-    TextEditingController resultat1 = new TextEditingController();
+  TextEditingController resultat1 = new TextEditingController();
   BuildContext context;
   Langue l;
   var noms;
@@ -2212,14 +2231,14 @@ class DataSearch1 extends SearchDelegate<String> {
                     return InkWell(
                       onTap: () {
                         resultat1.text = (sugest[index]['q_encien']).toString();
-                                        if (nom.text.isEmpty) {
-                                          nom.text = sugest[index]['nom'];
-                                          } else if (nom2.text.isEmpty) {
-                                          nom2.text = sugest[index]['nom'];
-                                          } else {
-                                            nom.text = sugest[index]['nom'];
-                                              nom2.text = "";
-                                          }
+                        if (nom.text.isEmpty) {
+                          nom.text = sugest[index]['nom'];
+                        } else if (nom2.text.isEmpty) {
+                          nom2.text = sugest[index]['nom'];
+                        } else {
+                          nom.text = sugest[index]['nom'];
+                          nom2.text = "";
+                        }
                         Navigator.pop(context);
                       },
                       child: Padding(
@@ -2362,8 +2381,7 @@ class DataSearch2 extends SearchDelegate<String> {
                   fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
               textAlign: TextAlign.center)
           : l.eng == 1
-              ? Text(
-                  "Your Packet has Finished Do you want to pay one again ?",
+              ? Text("Your Packet has Finished Do you want to pay one again ?",
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -2517,10 +2535,9 @@ class DataSearch2 extends SearchDelegate<String> {
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
-deleteprobleme(String nom1, String nom2, String date){
+  deleteprobleme(String nom1, String nom2, String date) {
     try {
-      http.post(
-          "https://kakwetuburundifafanini.com/dpr/deleteprobleme.php",
+      http.post("https://kakwetuburundifafanini.com/dpr/deleteprobleme.php",
           body: {
             "nom_p": nom1,
             "nom_g": nom2,
@@ -2533,7 +2550,7 @@ deleteprobleme(String nom1, String nom2, String date){
     }
   }
 
-  void messagevalidersuppression(String nomp, String nomg, String date,int i) {
+  void messagevalidersuppression(String nomp, String nomg, String date, int i) {
     AlertDialog alerte = new AlertDialog(
       backgroundColor: Colors.black,
       content: l.fra == 1
@@ -2693,16 +2710,16 @@ deleteprobleme(String nom1, String nom2, String date){
                 element['nom_p']
                     .toString()
                     .toUpperCase()
-                    .contains(query.toUpperCase())||element['nom_g']
+                    .contains(query.toUpperCase()) ||
+                element['nom_g']
                     .toString()
                     .toLowerCase()
                     .contains(query.toLowerCase()) ||
                 element['nom_g']
                     .toString()
                     .toUpperCase()
-                    .contains(query.toUpperCase())||element['dat']
-                    .toString()
-                    .contains(query))
+                    .contains(query.toUpperCase()) ||
+                element['dat'].toString().contains(query))
             .toList();
     return Scaffold(
       body: Column(
@@ -2758,8 +2775,8 @@ deleteprobleme(String nom1, String nom2, String date){
                                                         sugest[index]['nom_p'],
                                                     style: TextStyle(
                                                         fontSize: 25,
-                                                        color: Colors
-                                                            .redAccent)),
+                                                        color:
+                                                            Colors.redAccent)),
                                     this.l.fra == 1
                                         ? Text(
                                             "quantité : " +
@@ -2828,10 +2845,10 @@ deleteprobleme(String nom1, String nom2, String date){
                                             ),
                                             onPressed: () {
                                               messagevalidersuppression(
-                                                sugest[index]['nom_p'],
-                                                sugest[index]['nom_g'],
-                                                sugest[index]['dat'],index
-                                              );
+                                                  sugest[index]['nom_p'],
+                                                  sugest[index]['nom_g'],
+                                                  sugest[index]['dat'],
+                                                  index);
                                             }),
                                       ),
                                     )
@@ -2877,30 +2894,64 @@ deleteprobleme(String nom1, String nom2, String date){
                                 ),
                                 title: RichText(
                                   text: TextSpan(
-                                      text:sugest[index]['nom_p'].toString().contains(query)? sugest[index]['nom_p']
-                                          .substring(0, query.length):sugest[index]['nom_p'].toString().contains(query.toUpperCase())?sugest[index]['nom_p']
-                                          .substring(0, query.length):sugest[index]['dat'].toString().contains(query)?sugest[index]['dat']
-                                          .substring(0, query.length):sugest[index]['nom_g'].toString().contains(query)?sugest[index]['nom_g']
-                                          .substring(0, query.length):sugest[index]['nom_g'].toString().contains(query.toUpperCase())?sugest[index]['nom_g']
-                                          .substring(0, query.length):sugest[index]['nom_p']
-                                          .substring(0, query.length),
-                                      style: TextStyle(
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 30),
+                                      text: sugest[index]['nom_p']
+                                              .toString()
+                                              .contains(query)
+                                          ? sugest[index]['nom_p']
+                                              .substring(0, query.length)
+                                          : sugest[index]['nom_p']
+                                                  .toString()
+                                                  .contains(query.toUpperCase())
+                                              ? sugest[index]['nom_p']
+                                                  .substring(0, query.length)
+                                              : sugest[index]['dat']
+                                                      .toString()
+                                                      .contains(query)
+                                                  ? sugest[index]['dat']
+                                                      .substring(
+                                                          0, query.length)
+                                                  : sugest[index]['nom_g']
+                                                          .toString()
+                                                          .contains(query)
+                                                      ? sugest[index]['nom_g']
+                                                          .substring(
+                                                              0, query.length)
+                                                      : sugest[index]['nom_g']
+                                                              .toString()
+                                                              .contains(query.toUpperCase())
+                                                          ? sugest[index]['nom_g'].substring(0, query.length)
+                                                          : sugest[index]['nom_p'].substring(0, query.length),
+                                      style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 30),
                                       children: [
                                         TextSpan(
-                                            text:sugest[index]['nom_p'].toString().contains(query)?sugest[index]['nom_p']
-                                                .substring(query.length):sugest[index]['nom_p'].toString().contains(query.toUpperCase())?sugest[index]['nom_p']
-                                                .substring(query.length):sugest[index]['dat'].toString().contains(query)?sugest[index]['dat']
-                                                .substring(query.length):sugest[index]['nom_g'].toString().contains(query)?sugest[index]['nom_g']
-                                                .substring(query.length):sugest[index]['nom_g'].toString().contains(query.toUpperCase())?sugest[index]['nom_g']
-                                                .substring(query.length):sugest[index]['nom_p']
-                                                .substring(query.length),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                                fontSize: 30)),
+                                            text: sugest[index]['nom_p']
+                                                    .toString()
+                                                    .contains(query)
+                                                ? sugest[index]['nom_p']
+                                                    .substring(query.length)
+                                                : sugest[index]['nom_p']
+                                                        .toString()
+                                                        .contains(
+                                                            query.toUpperCase())
+                                                    ? sugest[index]['nom_p']
+                                                        .substring(query.length)
+                                                    : sugest[index]['dat']
+                                                            .toString()
+                                                            .contains(query)
+                                                        ? sugest[index]['dat']
+                                                            .substring(
+                                                                query.length)
+                                                        : sugest[index]['nom_g']
+                                                                .toString()
+                                                                .contains(query)
+                                                            ? sugest[index]['nom_g'].substring(
+                                                                query.length)
+                                                            : sugest[index]['nom_g']
+                                                                    .toString()
+                                                                    .contains(query.toUpperCase())
+                                                                ? sugest[index]['nom_g'].substring(query.length)
+                                                                : sugest[index]['nom_p'].substring(query.length),
+                                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 30)),
                                       ]),
                                 ),
                               ),

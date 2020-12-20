@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'package:dropdownfield/dropdownfield.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kakwetu/sqldb.dart';
 import 'package:flutter/foundation.dart';
+
 class Page3 extends StatefulWidget {
   final Langue l;
   final String nom;
@@ -15,7 +16,14 @@ class Page3 extends StatefulWidget {
   final String pass;
   final String pays;
   final String idphone;
-  Page3({Key key, this.l, this.nom, this.prenom, this.pass, this.pays,this.idphone})
+  Page3(
+      {Key key,
+      this.l,
+      this.nom,
+      this.prenom,
+      this.pass,
+      this.pays,
+      this.idphone})
       : super(key: key);
   @override
   _Page3State createState() => _Page3State();
@@ -63,14 +71,14 @@ class _Page3State extends State<Page3> {
 
   final _formKey = GlobalKey<FormState>();
   List<String> operateurs = [];
-selectoperator() async {
+  selectoperator() async {
     try {
       final response = await http.post(
           "https://kakwetuburundifafanini.com/get/selectoperatordepays.php",
           body: {"pays": widget.pays});
-      var resultat=await compute(_isolate,response.body);
-     setState(() {
-        final paysl1 =resultat;
+      var resultat = await compute(_isolate, response.body);
+      setState(() {
+        final paysl1 = resultat;
         for (int i = 0; i < paysl1.length; i++) {
           setState(() {
             operateurs.add(paysl1[i]['opr']);
@@ -113,20 +121,21 @@ selectoperator() async {
     }
     return result.toString();
   }
-static _isolate(String body){
-return jsonDecode(body);
+
+  static _isolate(String body) {
+    return jsonDecode(body);
   }
+
   selecttypepayementdeoperateur(String imihora) async {
     try {
       final response = await http.post(
           "https://kakwetuburundifafanini.com/get/selecttypepayementdeoperateu.php",
           body: {"imihora": imihora});
-         var resultat=jsonDecode(response.body);
-     setState(() {
-               _streamcontroller1.add(resultat);
+      var resultat = jsonDecode(response.body);
+      setState(() {
+        _streamcontroller1.add(resultat);
       });
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   selecttypebossexist() async {
@@ -137,11 +146,11 @@ return jsonDecode(body);
             "nom_b": widget.nom,
             "pd": widget.pass,
             "prenom_b": widget.prenom,
-            "tid":widget.idphone,
-            "nro":"",
-            "etat":""
+            "tid": widget.idphone,
+            "nro": "",
+            "etat": ""
           });
- var resultat=await compute(_isolate,response.body);
+      var resultat = await compute(_isolate, response.body);
       if (resultat.length == 0) {
         Fluttertoast.showToast(
             msg: widget.l.fra == 1
@@ -217,15 +226,14 @@ return jsonDecode(body);
     }
   }
 
-  Future<dynamic> ecobank(var phoneNumber, amount) async {
+  Future<dynamic> nk(var phoneNumber, amount) async {
     var sendMap = <String, dynamic>{
       'numero': phoneNumber,
       'montant': amount,
     };
-// response waits for result from java code
     String response = "";
     try {
-      final String result = await _hover.invokeMethod('ecobank', sendMap);
+      final String result = await _hover.invokeMethod('nk', sendMap);
       setState(() {
         response = result;
       });
@@ -237,15 +245,14 @@ return jsonDecode(body);
     });
   }
 
-  Future<dynamic> bbci(var phoneNumber, amount) async {
+  Future<dynamic> ci(var phoneNumber, amount) async {
     var sendMap = <String, dynamic>{
       'numero': phoneNumber,
       'montant': amount,
     };
-// response waits for result from java code
     String response = "";
     try {
-      final String result = await _hover.invokeMethod('bbci', sendMap);
+      final String result = await _hover.invokeMethod('ci', sendMap);
       setState(() {
         response = result;
       });
@@ -257,15 +264,14 @@ return jsonDecode(body);
     });
   }
 
-  Future<dynamic> bancobu(var phoneNumber, amount) async {
+  Future<dynamic> bu(var phoneNumber, amount) async {
     var sendMap = <String, dynamic>{
       'numero': phoneNumber,
       'montant': amount,
     };
-// response waits for result from java code
     String response = "";
     try {
-      final String result = await _hover.invokeMethod('bancobu', sendMap);
+      final String result = await _hover.invokeMethod('bu', sendMap);
       setState(() {
         response = result;
       });
@@ -277,15 +283,14 @@ return jsonDecode(body);
     });
   }
 
-  Future<dynamic> ecocash(var phoneNumber, amount) async {
+  Future<dynamic> ec(var phoneNumber, amount) async {
     var sendMap = <String, dynamic>{
       'numero': phoneNumber,
       'montant': amount,
     };
-// response waits for result from java code
     String response = "";
     try {
-      final String result = await _hover.invokeMethod('ecocash', sendMap);
+      final String result = await _hover.invokeMethod('ec', sendMap);
       setState(() {
         response = result;
       });
@@ -297,16 +302,15 @@ return jsonDecode(body);
     });
   }
 
-  Future<dynamic> lumicash(var phoneNumber, amount, aide) async {
+  Future<dynamic> mi(var phoneNumber, amount, aide) async {
     var sendMap = <String, dynamic>{
       'numero': phoneNumber,
       'montant': amount,
-      'object': aide,
+      'objet': aide,
     };
-// response waits for result from java code
     String response = "";
     try {
-      final String result = await _hover.invokeMethod('lumicash', sendMap);
+      final String result = await _hover.invokeMethod('mi', sendMap);
       setState(() {
         response = result;
       });
@@ -323,7 +327,7 @@ return jsonDecode(body);
       final response = await http.post(
           "https://kakwetuburundifafanini.com/first/checkdoublenumero.php",
           body: {"nro": ynumero});
-       var resultat=await compute(_isolate,response.body);
+      var resultat = await compute(_isolate, response.body);
       if (resultat.length == 0) {
       } else {
         Fluttertoast.showToast(
@@ -360,7 +364,7 @@ return jsonDecode(body);
   }
 
   bool visible1 = false;
-  addechecpayement(){
+  addechecpayement() {
     setState(() {
       visible1 = true;
     });
@@ -375,42 +379,42 @@ return jsonDecode(body);
             "op": imihora,
             "pays": widget.pays,
             "motant": montant,
-          }).then((value){
-            if(value.statusCode==200){
-             setState(() {
-        _actionResponse = "";
-        visible1 = false;
-        amount.text = "";
-        pop = true;
-        Fluttertoast.showToast(
-            msg: widget.l.fra == 1
-                ? "Réessayez Encore"
-                : widget.l.eng == 1
-                    ? "Retry Once Again"
-                    : widget.l.swa == 1
-                        ? "Jaribu tena"
-                        : "Mugerageze kandi",
-            backgroundColor: Colors.red,
-            gravity: ToastGravity.CENTER,
-            toastLength: Toast.LENGTH_LONG);
-      });
-            }else{
-setState(() {
-        Fluttertoast.showToast(
-            msg: widget.l.fra == 1
-                ? "Echec,Acceptez encore"
-                : widget.l.eng == 1
-                    ? "Failed,Accept Once again"
-                    : widget.l.swa == 1
-                        ? "Bimekatala,Kubari tena"
-                        : "Ntivyakunze,Emeza kandi",
-            backgroundColor: Colors.red,
-            gravity: ToastGravity.CENTER,
-            toastLength: Toast.LENGTH_LONG);
-        visible1 = false;
-      });
-            }
+          }).then((value) {
+        if (value.statusCode == 200) {
+          setState(() {
+            _actionResponse = "";
+            visible1 = false;
+            amount.text = "";
+            pop = true;
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Réessayez Encore"
+                    : widget.l.eng == 1
+                        ? "Retry Once Again"
+                        : widget.l.swa == 1
+                            ? "Jaribu tena"
+                            : "Mugerageze kandi",
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
           });
+        } else {
+          setState(() {
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Echec,Acceptez encore"
+                    : widget.l.eng == 1
+                        ? "Failed,Accept Once again"
+                        : widget.l.swa == 1
+                            ? "Bimekatala,Kubari tena"
+                            : "Ntivyakunze,Emeza kandi",
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
+            visible1 = false;
+          });
+        }
+      });
     } catch (e) {
       setState(() {
         Fluttertoast.showToast(
@@ -430,13 +434,12 @@ setState(() {
     }
   }
 
-  updatebcnumero(){
+  updatebcnumero() {
     setState(() {
       visible1 = true;
     });
     try {
-     http.post(
-          "https://kakwetuburundifafanini.com/update/updateb_cnumero.php",
+      http.post("https://kakwetuburundifafanini.com/update/updateb_cnumero.php",
           body: {
             "nro": numero,
             "prenom_b": widget.prenom,
@@ -447,46 +450,46 @@ setState(() {
             "numero": numero,
             "sme": montant,
             "pays": widget.pays,
-            "tid":widget.idphone
-          }).then((value){
-            if(value.statusCode==200){
-Numero e = Numero(null, numero);
-      dbHelper.save(e);
-      Fluttertoast.showToast(
-          msg: widget.l.fra == 1
-              ? "Bienvenue dans Kakwetu"
-              : widget.l.eng == 1
-                  ? "Welcome in Kakwetu"
-                  : widget.l.swa == 1
-                      ? "Karibu kwenye Kakwetu"
-                      : "Murakaza Neza Muri Kakwetu",
-          backgroundColor: Colors.black,
-          gravity: ToastGravity.CENTER,
-          toastLength: Toast.LENGTH_LONG);
-      setState(() {
-        _actionResponse = "";
-        visible1 = false;
-        pop = true;
-      });
-      Navigator.pop(context);
-      Navigator.pop(context);
-            }else{
-setState(() {
-        visible1 = false;
-        Fluttertoast.showToast(
-            msg: widget.l.fra == 1
-                ? "Echec,Acceptez encore"
-                : widget.l.eng == 1
-                    ? "Failed,Accept Once again"
-                    : widget.l.swa == 1
-                        ? "Bimekatala,Kubari tena"
-                        : "Ntivyakunze,Emeza kandi",
-            backgroundColor: Colors.red,
-            gravity: ToastGravity.CENTER,
-            toastLength: Toast.LENGTH_LONG);
-      });
-            }
+            "tid": widget.idphone
+          }).then((value) {
+        if (value.statusCode == 200) {
+          Numero e = Numero(null, numero);
+          dbHelper.save(e);
+          Fluttertoast.showToast(
+              msg: widget.l.fra == 1
+                  ? "Bienvenue dans Kakwetu"
+                  : widget.l.eng == 1
+                      ? "Welcome in Kakwetu"
+                      : widget.l.swa == 1
+                          ? "Karibu kwenye Kakwetu"
+                          : "Murakaza Neza Muri Kakwetu",
+              backgroundColor: Colors.black,
+              gravity: ToastGravity.CENTER,
+              toastLength: Toast.LENGTH_LONG);
+          setState(() {
+            _actionResponse = "";
+            visible1 = false;
+            pop = true;
           });
+          Navigator.pop(context);
+          Navigator.pop(context);
+        } else {
+          setState(() {
+            visible1 = false;
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Echec,Acceptez encore"
+                    : widget.l.eng == 1
+                        ? "Failed,Accept Once again"
+                        : widget.l.swa == 1
+                            ? "Bimekatala,Kubari tena"
+                            : "Ntivyakunze,Emeza kandi",
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
+          });
+        }
+      });
     } catch (e) {
       setState(() {
         visible1 = false;
@@ -566,6 +569,17 @@ setState(() {
       a1 = (sqrt(log(b))).toString();
     });
     return a1;
+  }
+
+  update() {
+    String pa = "com.nini.fafa";
+    try {
+      launch("market://details?id=" + pa);
+    } on PlatformException catch (e) {
+      launch("https://play.google.com/store/apps/details?id=" + pa);
+    } finally {
+      launch("https://play.google.com/store/apps/details?id=" + pa);
+    }
   }
 
   snackabarfauxop() {
@@ -698,47 +712,65 @@ setState(() {
                             return null;
                           } else if (snap.hasData) {
                             return Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20,bottom: 8.0),
-                              child: Card(
-                                color: Colors.amber,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                        color: Colors.lightBlue, width: 2),
-                                    borderRadius: BorderRadius.circular(15)),
-                                child: Visibility(
-                                  visible: _actionResponse != "" ? false : true,
-                                  child: DropDownField(
-                                    onValueChanged: (v) {
-                                      setState(() {
-                                        selecttypepayementdeoperateur(v);
-                                        imihora = v;
-                                        amount.text = "";
-                                        _actionResponse = "";
-                                      });
-                                    },
-                                    controller: drop,
-                                    textStyle: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                    labelText: widget.l.fra == 1
-                                        ? "Réseau"
-                                        : widget.l.eng == 1
-                                            ? "Network"
-                                            : widget.l.swa == 1
-                                                ? "Mtandao"
-                                                : "Umuhora",
-                                    labelStyle: TextStyle(
-                                        color: Colors.blue,
-                                        fontSize: 20,
-                                        fontStyle: FontStyle.italic),
-                                    strict: false,
-                                    items: operateurs,
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, bottom: 8.0),
+                                child: Card(
+                                  color: Colors.amber,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                          color: Colors.lightBlue, width: 2),
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Visibility(
+                                    visible:
+                                        _actionResponse != "" ? false : true,
+                                    child: DropdownButtonFormField(
+                                      autofocus: false,
+                                      autovalidate: false,
+                                      isDense: true,
+                                      isExpanded: true,
+                                      dropdownColor: Colors.black,
+                                      items: snap.data.map((e) {
+                                        return DropdownMenuItem(
+                                          child: Center(
+                                            child: new Text(
+                                              e,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontStyle: FontStyle.italic,
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          value: e,
+                                        );
+                                      }).toList(),
+                                      onChanged: (v) {
+                                        setState(() {
+                                          selecttypepayementdeoperateur(v);
+                                          imihora = v;
+                                          amount.text = "";
+                                          _actionResponse = "";
+                                        });
+                                      },
+                                      hint: Center(
+                                        child: Text(
+                                          widget.l.fra == 1
+                                              ? "Réseau"
+                                              : widget.l.eng == 1
+                                                  ? "Network"
+                                                  : widget.l.swa == 1
+                                                      ? "Mtandao"
+                                                      : "Umuhora",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            );
+                                ));
                           } else {
                             return Visibility(
                                 visible: _actionResponse != "" ? false : true,
@@ -758,7 +790,7 @@ setState(() {
                           child: ListView.builder(
                               controller: _scrollcontroller,
                               scrollDirection: Axis.horizontal,
-                              itemCount:snap.data.length,
+                              itemCount: snap.data.length,
                               itemBuilder: (context, i) {
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -770,7 +802,8 @@ setState(() {
                                       onTap: () {
                                         setState(() {
                                           widget.l.fra == 1
-                                              ? amount.text = snap.data[i]['mtt'] +
+                                              ? amount.text = snap.data[i]
+                                                      ['mtt'] +
                                                   " de " +
                                                   snap.data[i]['dre'] +
                                                   " Jours"
@@ -781,12 +814,12 @@ setState(() {
                                                       snap.data[i]['dre'] +
                                                       " Days"
                                                   : widget.l.swa == 1
-                                                      ? amount.text = snap.data[i]
-                                                              ['mtt'] +
+                                                      ? amount.text = snap
+                                                              .data[i]['mtt'] +
                                                           " Ya Siku " +
                                                           snap.data[i]['dre']
-                                                      : amount.text = snap.data[i]
-                                                              ['mtt'] +
+                                                      : amount.text = snap
+                                                              .data[i]['mtt'] +
                                                           " Mumisi " +
                                                           snap.data[i]['dre'];
                                           messagepay1 = decrypterchaine(
@@ -813,7 +846,8 @@ setState(() {
                                               borderRadius:
                                                   BorderRadius.circular(5)),
                                           child: Column(
-                                             mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               Padding(
                                                 padding:
@@ -844,9 +878,8 @@ setState(() {
                                                         ? Text("Amount: " + snap.data[i]['mtt'],
                                                             style: TextStyle(
                                                                 fontSize: 20,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
+                                                                fontWeight: FontWeight
+                                                                    .bold,
                                                                 color: Colors
                                                                     .white))
                                                         : widget.l.swa == 1
@@ -863,8 +896,7 @@ setState(() {
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         20,
-                                                                    fontWeight:
-                                                                        FontWeight.bold,
+                                                                    fontWeight: FontWeight.bold,
                                                                     color: Colors.white)),
                                               ),
                                               Padding(
@@ -897,12 +929,9 @@ setState(() {
                                                                             .bold,
                                                                     color: Colors
                                                                         .white))
-                                                            : Text("Imisi " + snap.data[i]['dre'],
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        20,
-                                                                    fontWeight: FontWeight.bold,
-                                                                    color: Colors.white)),
+                                                            : Text(
+                                                                "Imisi " + snap.data[i]['dre'],
+                                                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
                                               ),
                                             ],
                                           ),
@@ -986,25 +1015,26 @@ setState(() {
                                               .contains(messagepay2)) {
                                         updatebcnumero();
                                       } else if (_actionResponse.isEmpty) {
-                                        if (drop.text.isEmpty) {
+                                        if (imihora == "") {
                                           snackabarfauxop();
                                         } else if (amount.text.isEmpty) {
                                           snackabarfauxpa();
                                         } else {
                                           if (modepayement == "lumicash") {
-                                            lumicash(phone, montant,
-                                                "Encouragement");
+                                            mi(phone, montant, "Encouragement");
                                           } else if (modepayement ==
                                               "ecocash") {
-                                            ecocash(phone, montant);
+                                            ec(phone, montant);
                                           } else if (modepayement == "mcash") {
-                                            bancobu(phone, montant);
+                                            bu(phone, montant);
                                           } else if (modepayement ==
                                               "fonecash") {
-                                            bbci(phone, montant);
+                                            ci(phone, montant);
                                           } else if (modepayement ==
                                               "ecobankpay") {
-                                            ecobank(phone, montant);
+                                            nk(phone, montant);
+                                          } else {
+                                            update();
                                           }
                                         }
                                       } else {

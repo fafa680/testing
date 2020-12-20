@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../servicepayement.dart';
 import 'travailleurs/peyementdette.dart';
 import 'package:flutter/foundation.dart';
+
 class Dette extends StatefulWidget {
   final Langue l;
   final int isboss;
@@ -49,36 +50,38 @@ class _DetteState extends State<Dette> {
   bool ispop = true;
   FocusNode focusnode;
   FocusNode focusnode1;
-   FocusNode focusnode2;
+  FocusNode focusnode2;
   FocusNode focusnode3;
   FocusNode focusnode4;
   @override
   void initState() {
-     focusnode=FocusNode();
-    focusnode1=FocusNode();
-    focusnode2=FocusNode();
-    focusnode3=FocusNode();
-     focusnode4=FocusNode();
-    focusnode.addListener(() { });
-    focusnode1.addListener(() { });
-    focusnode2.addListener(() { });
-    focusnode3.addListener(() { });
-     focusnode4.addListener(() { });
+    focusnode = FocusNode();
+    focusnode1 = FocusNode();
+    focusnode2 = FocusNode();
+    focusnode3 = FocusNode();
+    focusnode4 = FocusNode();
+    focusnode.addListener(() {});
+    focusnode1.addListener(() {});
+    focusnode2.addListener(() {});
+    focusnode3.addListener(() {});
+    focusnode4.addListener(() {});
     selectdette();
     selectstock();
-    _timer = Timer.periodic(const Duration(seconds:5), (timer) {
-    selectdette();
-    selectstock();
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      selectdette();
+      selectstock();
     });
     super.initState();
   }
-dismisskeyboard(){
-  focusnode.unfocus();
-  focusnode1.unfocus();
-  focusnode2.unfocus();
-  focusnode3.unfocus();
-  focusnode4.unfocus();
-}
+
+  dismisskeyboard() {
+    focusnode.unfocus();
+    focusnode1.unfocus();
+    focusnode2.unfocus();
+    focusnode3.unfocus();
+    focusnode4.unfocus();
+  }
+
   @override
   void dispose() {
     focusnode1.dispose();
@@ -113,30 +116,32 @@ dismisskeyboard(){
           .post("https://kakwetuburundifafanini.com/gs/selectstock.php", body: {
         "nro": widget.numero,
       });
-      var resultat=await compute(_isolate,response.body);
-     setState(() {
-             _streamcontroller1.add(resultat);
-        stock =resultat;
+      var resultat = await compute(_isolate, response.body);
+      setState(() {
+        _streamcontroller1.add(resultat);
+        stock = resultat;
       });
     } catch (e) {
       setState(() {
-       stock = [];
+        stock = [];
       });
     }
   }
- static _isolate(String body){
-return jsonDecode(body);
+
+  static _isolate(String body) {
+    return jsonDecode(body);
   }
-selectdette() async {
+
+  selectdette() async {
     try {
       final response = await http
           .post("https://kakwetuburundifafanini.com/gd/selectdette.php", body: {
         "nro": widget.numero,
       });
-var resultat=await compute(_isolate,response.body);
- setState(() {
-           _streamcontroller.add(resultat);
-       probleme = resultat;
+      var resultat = await compute(_isolate, response.body);
+      setState(() {
+        _streamcontroller.add(resultat);
+        probleme = resultat;
       });
     } catch (e) {
       setState(() {
@@ -145,7 +150,7 @@ var resultat=await compute(_isolate,response.body);
     }
   }
 
-firstcheckdette(){
+  firstcheckdette() {
     setState(() {
       ispop = false;
       visible1 = true;
@@ -158,8 +163,7 @@ firstcheckdette(){
           (double.parse(prix.text) > 0) &&
           (double.parse(qte.text) > 0) &&
           double.parse(resultat1.text) >= double.parse(qte.text)) {
-        http.post(
-            "https://kakwetuburundifafanini.com/fd/firstcheckdette1.php",
+        http.post("https://kakwetuburundifafanini.com/fd/firstcheckdette1.php",
             body: {
               "nom": name.text.trim().toUpperCase().replaceAll(' ', ''),
               "nom_client":
@@ -171,37 +175,36 @@ firstcheckdette(){
               "px": prix.text.trim().replaceAll(' ', ''),
               "qte": qte.text.trim().replaceAll(' ', ''),
               "q_encien": qte.text.trim().replaceAll(' ', ''),
-            }).then((value){
-          if(value.statusCode==200){
-          
-             Fluttertoast.showToast(
-              msg: widget.l.fra == 1
-                  ? "Bien Fait"
-                  : widget.l.eng == 1
-                      ? "Done"
-                      : widget.l.swa == 1
-                          ? "Umeweza"
-                          : "Vyakunze",
-              backgroundColor: Colors.black,
-              gravity: ToastGravity.CENTER,
-              toastLength: Toast.LENGTH_LONG);
-              selectdette();
-              selectstock();
-          }else{
+            }).then((value) {
+          if (value.statusCode == 200) {
             Fluttertoast.showToast(
-              msg: widget.l.fra == 1
-                  ? "Operation Echouée"
-                  : widget.l.eng == 1
-                      ? "Failed"
-                      : widget.l.swa == 1
-                          ? "Bimekatala"
-                          : "Ntivyakunze",
-              backgroundColor: Colors.red,
-              gravity: ToastGravity.CENTER,
-              toastLength: Toast.LENGTH_LONG);
+                msg: widget.l.fra == 1
+                    ? "Bien Fait"
+                    : widget.l.eng == 1
+                        ? "Done"
+                        : widget.l.swa == 1
+                            ? "Umeweza"
+                            : "Vyakunze",
+                backgroundColor: Colors.black,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
+            selectdette();
+            selectstock();
+          } else {
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Operation Echouée"
+                    : widget.l.eng == 1
+                        ? "Failed"
+                        : widget.l.swa == 1
+                            ? "Bimekatala"
+                            : "Ntivyakunze",
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
           }
         });
-          setState(() {
+        setState(() {
           name.text = "";
           qte.text = "";
           prix.text = "";
@@ -579,7 +582,7 @@ firstcheckdette(){
                       });
                     }
                   } else {
-               firstcheckdette();
+                    firstcheckdette();
                   }
                 } else {
                   setState(() {
@@ -674,7 +677,7 @@ firstcheckdette(){
 
   _scrolldown() {
     _scrollcontroller.animateTo(_scrollcontroller.position.maxScrollExtent,
-        duration: Duration(seconds:probleme.isEmpty ? 1 :probleme.length * 2),
+        duration: Duration(seconds: probleme.isEmpty ? 1 : probleme.length * 2),
         curve: Curves.easeOut);
     setState(() {
       _isontop = false;
@@ -692,7 +695,7 @@ firstcheckdette(){
 
   _scrolldown1() {
     _scrollcontroller1.animateTo(_scrollcontroller1.position.maxScrollExtent,
-        duration: Duration(seconds:stock.isEmpty ? 1 :stock.length * 2),
+        duration: Duration(seconds: stock.isEmpty ? 1 : stock.length * 2),
         curve: Curves.easeOut);
     setState(() {
       _isontop1 = false;
@@ -733,9 +736,6 @@ firstcheckdette(){
       actions: <Widget>[
         MaterialButton(
           onPressed: () {
-            setState(() {
-              ispop = true;
-            });
             Navigator.pop(context);
           },
           child: widget.l.fra == 1
@@ -768,9 +768,6 @@ firstcheckdette(){
         ),
         MaterialButton(
           onPressed: () {
-            setState(() {
-              ispop = true;
-            });
             Navigator.pop(context);
             Navigator.pop(context);
           },
@@ -822,8 +819,10 @@ firstcheckdette(){
       onWillPop: () {
         if (ispop) {
           messagevalidation1();
+        } else {
+          return _willpop();
         }
-        return _willpop();
+        return null;
       },
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -930,8 +929,7 @@ firstcheckdette(){
                                 child: ListView.builder(
                                     controller: _scrollcontroller,
                                     physics: BouncingScrollPhysics(),
-                                    itemCount:
-                                        snap.data.length,
+                                    itemCount: snap.data.length,
                                     itemBuilder: (context, i) {
                                       return InkWell(
                                         splashColor: Colors.white,
@@ -968,8 +966,7 @@ firstcheckdette(){
                                                                   '2'
                                                               ? Text("Lundi le " + snap.data[i]['dat'] + " : ",
                                                                   style: TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight.bold,
+                                                                      fontWeight: FontWeight.bold,
                                                                       color: Colors.white))
                                                               : snap.data[i]['jour'].toString() == '3'
                                                                   ? Text("Mardi le " + snap.data[i]['dat'] + " : ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))
@@ -1056,9 +1053,7 @@ firstcheckdette(){
                                                 child: Text(
                                                   snap.data[i]['qte'] +
                                                       "/" +
-                                                      (double.parse(snap.data[i]
-                                                              ['px']))
-                                                          .toStringAsFixed(2),
+                                                      snap.data[i]['px'],
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.white,
@@ -1069,9 +1064,7 @@ firstcheckdette(){
                                                 padding:
                                                     const EdgeInsets.all(8.0),
                                                 child: Text(
-                                                  (double.parse(
-                                                          snap.data[i]['total']))
-                                                      .toStringAsFixed(2),
+                                                  snap.data[i]['total'],
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -1129,7 +1122,7 @@ firstcheckdette(){
                                 child: ListView.builder(
                                     controller: _scrollcontroller1,
                                     physics: BouncingScrollPhysics(),
-                                    itemCount:snap.data.length,
+                                    itemCount: snap.data.length,
                                     itemBuilder: (context, i) {
                                       return InkWell(
                                         splashColor: Colors.white,
@@ -1203,7 +1196,8 @@ firstcheckdette(){
                                                         : widget.l.swa == 1
                                                             ? Text(
                                                                 "Hisa:" +
-                                                                    snap.data[i][
+                                                                    snap.data[i]
+                                                                        [
                                                                         'q_encien'],
                                                                 style: TextStyle(
                                                                     fontWeight:
@@ -1214,7 +1208,8 @@ firstcheckdette(){
                                                               )
                                                             : Text(
                                                                 "Sitoke:" +
-                                                                    snap.data[i][
+                                                                    snap.data[i]
+                                                                        [
                                                                         'q_encien'],
                                                                 style: TextStyle(
                                                                     fontWeight:
@@ -1287,7 +1282,7 @@ firstcheckdette(){
                                         showSearch(
                                             context: context,
                                             delegate: DataSearch1(name, context,
-                                                widget.l,stock, resultat1));
+                                                widget.l, stock, resultat1));
                                       },
                                       child: Row(
                                         mainAxisAlignment:
@@ -1557,8 +1552,9 @@ firstcheckdette(){
                                     child: TextFormField(
                                       focusNode: focusnode2,
                                       inputFormatters: [
-                                    new FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z.,-/]"))
-                                                                 ],
+                                        new FilteringTextInputFormatter.allow(
+                                            RegExp("[0-9a-zA-Z.,-/]"))
+                                      ],
                                       controller: namecl,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold),
@@ -1597,8 +1593,9 @@ firstcheckdette(){
                                     child: TextFormField(
                                       focusNode: focusnode3,
                                       inputFormatters: [
-                                    new FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z.,-/]"))
-                                                                 ],
+                                        new FilteringTextInputFormatter.allow(
+                                            RegExp("[0-9a-zA-Z.,-/]"))
+                                      ],
                                       controller: prenomcl,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold),
@@ -2734,18 +2731,17 @@ class DataSearch2 extends SearchDelegate<String> {
                 element['prenom_client']
                     .toString()
                     .toUpperCase()
-                    .contains(query.toUpperCase())||element['nom']
+                    .contains(query.toUpperCase()) ||
+                element['nom']
                     .toString()
                     .toLowerCase()
                     .contains(query.toLowerCase()) ||
                 element['nom']
                     .toString()
                     .toUpperCase()
-                    .contains(query.toUpperCase())||element['dat']
-                    .toString()
-                    .contains(query)||element['telephone_client']
-                    .toString()
-                    .contains(query))
+                    .contains(query.toUpperCase()) ||
+                element['dat'].toString().contains(query) ||
+                element['telephone_client'].toString().contains(query))
             .toList();
     return Scaffold(
       body: Column(
@@ -2884,36 +2880,75 @@ class DataSearch2 extends SearchDelegate<String> {
                                 ),
                                 title: RichText(
                                   text: TextSpan(
-                                      text:sugest[index]['nom_client'].toString().contains(query)? sugest[index]['nom_client']
-                                          .substring(0, query.length):sugest[index]['nom_client'].toString().contains(query.toUpperCase())?sugest[index]['nom_client']
-                                          .substring(0, query.length):sugest[index]['telephone_client'].toString().contains(query)?sugest[index]['telephone_client']
-                                          .substring(0, query.length):sugest[index]['dat'].toString().contains(query)?sugest[index]['dat']
-                                          .substring(0, query.length):sugest[index]['prenom_client'].toString().contains(query)?sugest[index]['prenom_client']
-                                          .substring(0, query.length):sugest[index]['prenom_client'].toString().contains(query.toUpperCase())?sugest[index]['prenom_client']
-                                          .substring(0, query.length):sugest[index]['nom'].toString().contains(query)?sugest[index]['nom']
-                                          .substring(0, query.length):sugest[index]['nom'].toString().contains(query.toUpperCase())?sugest[index]['nom']
-                                          .substring(0, query.length):sugest[index]['nom_client']
-                                          .substring(0, query.length),
-                                      style: TextStyle(
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 30),
+                                      text: sugest[index]['nom_client']
+                                              .toString()
+                                              .contains(query)
+                                          ? sugest[index]['nom_client']
+                                              .substring(0, query.length)
+                                          : sugest[index]['nom_client']
+                                                  .toString()
+                                                  .contains(query.toUpperCase())
+                                              ? sugest[index]['nom_client']
+                                                  .substring(0, query.length)
+                                              : sugest[index]['telephone_client']
+                                                      .toString()
+                                                      .contains(query)
+                                                  ? sugest[index]['telephone_client']
+                                                      .substring(
+                                                          0, query.length)
+                                                  : sugest[index]['dat']
+                                                          .toString()
+                                                          .contains(query)
+                                                      ? sugest[index]['dat'].substring(
+                                                          0, query.length)
+                                                      : sugest[index]['prenom_client']
+                                                              .toString()
+                                                              .contains(query)
+                                                          ? sugest[index]['prenom_client'].substring(0, query.length)
+                                                          : sugest[index]['prenom_client'].toString().contains(query.toUpperCase())
+                                                              ? sugest[index]['prenom_client'].substring(0, query.length)
+                                                              : sugest[index]['nom'].toString().contains(query)
+                                                                  ? sugest[index]['nom'].substring(0, query.length)
+                                                                  : sugest[index]['nom'].toString().contains(query.toUpperCase())
+                                                                      ? sugest[index]['nom'].substring(0, query.length)
+                                                                      : sugest[index]['nom_client'].substring(0, query.length),
+                                      style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 30),
                                       children: [
                                         TextSpan(
-                                            text:sugest[index]['nom_client'].toString().contains(query)?sugest[index]['nom_client']
-                                                .substring(query.length):sugest[index]['nom_client'].toString().contains(query.toUpperCase())?sugest[index]['nom_client']
-                                                .substring(query.length):sugest[index]['telephone_client'].toString().contains(query)?sugest[index]['telephone_client']
-                                                .substring(query.length):sugest[index]['dat'].toString().contains(query)?sugest[index]['dat']
-                                                .substring(query.length):sugest[index]['prenom_client'].toString().contains(query)?sugest[index]['prenom_client']
-                                                .substring(query.length):sugest[index]['prenom_client'].toString().contains(query.toUpperCase())?sugest[index]['prenom_client']
-                                                .substring(query.length):sugest[index]['nom'].toString().contains(query)?sugest[index]['nom']
-                                                .substring(query.length):sugest[index]['nom'].toString().contains(query.toUpperCase())?sugest[index]['nom']
-                                                .substring(query.length):sugest[index]['nom_client']
-                                                .substring(query.length),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                                fontSize: 30)),
+                                            text: sugest[index]['nom_client']
+                                                    .toString()
+                                                    .contains(query)
+                                                ? sugest[index]['nom_client']
+                                                    .substring(query.length)
+                                                : sugest[index]['nom_client']
+                                                        .toString()
+                                                        .contains(
+                                                            query.toUpperCase())
+                                                    ? sugest[index]
+                                                            ['nom_client']
+                                                        .substring(query.length)
+                                                    : sugest[index]['telephone_client']
+                                                            .toString()
+                                                            .contains(query)
+                                                        ? sugest[index]['telephone_client']
+                                                            .substring(
+                                                                query.length)
+                                                        : sugest[index]['dat']
+                                                                .toString()
+                                                                .contains(query)
+                                                            ? sugest[index]
+                                                                    ['dat']
+                                                                .substring(query.length)
+                                                            : sugest[index]['prenom_client'].toString().contains(query)
+                                                                ? sugest[index]['prenom_client'].substring(query.length)
+                                                                : sugest[index]['prenom_client'].toString().contains(query.toUpperCase())
+                                                                    ? sugest[index]['prenom_client'].substring(query.length)
+                                                                    : sugest[index]['nom'].toString().contains(query)
+                                                                        ? sugest[index]['nom'].substring(query.length)
+                                                                        : sugest[index]['nom'].toString().contains(query.toUpperCase())
+                                                                            ? sugest[index]['nom'].substring(query.length)
+                                                                            : sugest[index]['nom_client'].substring(query.length),
+                                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 30)),
                                       ]),
                                 ),
                               ),

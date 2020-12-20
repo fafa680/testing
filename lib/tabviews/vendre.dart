@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import '../servicepayement.dart';
 import 'travailleurs/nostock.dart';
+
 class Vendre extends StatefulWidget {
   final Langue l;
   final String numero;
@@ -23,7 +24,8 @@ class Vendre extends StatefulWidget {
       this.password,
       this.isboss,
       this.duree,
-      this.worker,this.controled})
+      this.worker,
+      this.controled})
       : super(key: key);
 
   @override
@@ -37,31 +39,33 @@ class _VendreState extends State<Vendre> {
   TextEditingController namecl = new TextEditingController();
   TextEditingController prenomcl = new TextEditingController();
   TextEditingController total = new TextEditingController();
-   TextEditingController resultat1 = new TextEditingController();
+  TextEditingController resultat1 = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String etat = "0";
   var stock = [];
-    Timer _timer;
+  Timer _timer;
   ScrollController _scrollcontroller = new ScrollController();
   StreamController<List> _streamcontroller = StreamController<List>();
   FocusNode focusnode;
   FocusNode focusnode1;
   @override
   void initState() {
-    focusnode=FocusNode();
-    focusnode1=FocusNode();
-    focusnode.addListener(() { });
-    focusnode1.addListener(() { });
+    focusnode = FocusNode();
+    focusnode1 = FocusNode();
+    focusnode.addListener(() {});
+    focusnode1.addListener(() {});
     selectstock();
-    _timer = Timer.periodic(const Duration(seconds:5), (timer){
-  selectstock();
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      selectstock();
     });
     super.initState();
   }
-  dismisskeyboard(){
-  focusnode.unfocus();
-  focusnode1.unfocus();
-}
+
+  dismisskeyboard() {
+    focusnode.unfocus();
+    focusnode1.unfocus();
+  }
+
   @override
   void dispose() {
     if (_timer.isActive) _timer.cancel();
@@ -79,17 +83,19 @@ class _VendreState extends State<Vendre> {
     prenomcl.dispose();
     super.dispose();
   }
- selectstock() async {
+
+  selectstock() async {
     try {
-      final response = await http
-          .post("https://kakwetuburundifafanini.com/gs/selectstock.php", body: {
-        "nro": widget.numero,
-      },
+      final response = await http.post(
+        "https://kakwetuburundifafanini.com/gs/selectstock.php",
+        body: {
+          "nro": widget.numero,
+        },
       );
-      var resultat=await compute(_isolate,response.body);
+      var resultat = await compute(_isolate, response.body);
       setState(() {
-      _streamcontroller.add(resultat);
-        stock =resultat;
+        _streamcontroller.add(resultat);
+        stock = resultat;
       });
     } catch (e) {
       setState(() {
@@ -97,11 +103,13 @@ class _VendreState extends State<Vendre> {
       });
     }
   }
-  static _isolate(String body){
-return jsonDecode(body);
+
+  static _isolate(String body) {
+    return jsonDecode(body);
   }
+
   bool visible1 = false;
-    addvante() async{
+  addvante() async {
     setState(() {
       visible1 = true;
       ispop = false;
@@ -111,43 +119,45 @@ return jsonDecode(body);
           (double.parse(prix.text) > 0) &&
           (double.parse(qte.text) > 0) &&
           (double.parse(resultat1.text) >= double.parse(qte.text))) {
-http.post("https://kakwetuburundifafanini.com/av/addventep.php",body: {
-          "nom": name.text.toUpperCase().trim(),
-          "nro": widget.numero,
-          "px": prix.text.replaceAll(' ', '').trim(),
-          "qte": qte.text.replaceAll(' ', '').trim(),
-          "etat": etat,
-          "q_encien": qte.text.replaceAll(' ', '').trim(),
-        },
-        ).then((value){
-          if(value.statusCode==200){
-             Fluttertoast.showToast(
-              msg: widget.l.fra == 1
-                  ? "Bien Fait"
-                  : widget.l.eng == 1
-                      ? "Done"
-                      : widget.l.swa == 1
-                          ? "Umeweza"
-                          : "Vyakunze",
-              backgroundColor: Colors.black,
-              gravity: ToastGravity.CENTER,
-              toastLength: Toast.LENGTH_LONG);
-              selectstock();
-          }else{
+        http.post(
+          "https://kakwetuburundifafanini.com/av/addventep.php",
+          body: {
+            "nom": name.text.toUpperCase().trim(),
+            "nro": widget.numero,
+            "px": prix.text.replaceAll(' ', '').trim(),
+            "qte": qte.text.replaceAll(' ', '').trim(),
+            "etat": etat,
+            "q_encien": qte.text.replaceAll(' ', '').trim(),
+          },
+        ).then((value) {
+          if (value.statusCode == 200) {
             Fluttertoast.showToast(
-              msg: widget.l.fra == 1
-                  ? "Operation Echouée"
-                  : widget.l.eng == 1
-                      ? "Failed"
-                      : widget.l.swa == 1
-                          ? "Bimekatala"
-                          : "Ntivyakunze",
-              backgroundColor: Colors.red,
-              gravity: ToastGravity.CENTER,
-              toastLength: Toast.LENGTH_LONG);
+                msg: widget.l.fra == 1
+                    ? "Bien Fait"
+                    : widget.l.eng == 1
+                        ? "Done"
+                        : widget.l.swa == 1
+                            ? "Umeweza"
+                            : "Vyakunze",
+                backgroundColor: Colors.black,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
+            selectstock();
+          } else {
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Operation Echouée"
+                    : widget.l.eng == 1
+                        ? "Failed"
+                        : widget.l.swa == 1
+                            ? "Bimekatala"
+                            : "Ntivyakunze",
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
           }
         });
-          setState(() {
+        setState(() {
           visible1 = false;
           ispop = true;
           prix.text = "";
@@ -158,7 +168,7 @@ http.post("https://kakwetuburundifafanini.com/av/addventep.php",body: {
         });
       } else {
         setState(() {
-       Fluttertoast.showToast(
+          Fluttertoast.showToast(
               msg: widget.l.fra == 1
                   ? "Operation Echouée"
                   : widget.l.eng == 1
@@ -204,8 +214,7 @@ http.post("https://kakwetuburundifafanini.com/av/addventep.php",body: {
                   fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
               textAlign: TextAlign.center)
           : widget.l.eng == 1
-              ? Text(
-                  "Your Packet has Finished,Do you want to pay once again ?",
+              ? Text("Your Packet has Finished,Do you want to pay once again ?",
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -383,6 +392,7 @@ http.post("https://kakwetuburundifafanini.com/av/addventep.php",body: {
         });
     //return;
   }
+
   void messagevalidation() {
     AlertDialog alerte = new AlertDialog(
       backgroundColor: Colors.black,
@@ -502,7 +512,7 @@ http.post("https://kakwetuburundifafanini.com/av/addventep.php",body: {
                       });
                     }
                   } else {
-                 addvante();
+                    addvante();
                   }
                 } else {
                   setState(() {
@@ -595,9 +605,10 @@ http.post("https://kakwetuburundifafanini.com/av/addventep.php",body: {
       _isontop = true;
     });
   }
-_scrolldown() {
+
+  _scrolldown() {
     _scrollcontroller.animateTo(_scrollcontroller.position.maxScrollExtent,
-        duration: Duration(seconds: stock.isEmpty ? 1 : (stock.length*2)),
+        duration: Duration(seconds: stock.isEmpty ? 1 : (stock.length * 2)),
         curve: Curves.easeOut);
     setState(() {
       _isontop = false;
@@ -638,9 +649,6 @@ _scrolldown() {
       actions: <Widget>[
         MaterialButton(
           onPressed: () {
-            setState(() {
-              ispop = true;
-            });
             Navigator.pop(context);
           },
           child: widget.l.fra == 1
@@ -673,9 +681,6 @@ _scrolldown() {
         ),
         MaterialButton(
           onPressed: () {
-            setState(() {
-              ispop = true;
-            });
             Navigator.pop(context);
             Navigator.pop(context);
           },
@@ -720,14 +725,17 @@ _scrolldown() {
   Future<bool> _willpop() async {
     return Future.value(ispop);
   }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
         if (ispop) {
           messagevalidation1();
+        } else {
+          return _willpop();
         }
-        return _willpop();
+        return null;
       },
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -750,7 +758,7 @@ _scrolldown() {
                               child: ListView.builder(
                                   physics: BouncingScrollPhysics(),
                                   controller: _scrollcontroller,
-                                  itemCount:snap.data.length,
+                                  itemCount: snap.data.length,
                                   itemBuilder: (context, i) {
                                     return InkWell(
                                       splashColor: Colors.white,
@@ -763,7 +771,9 @@ _scrolldown() {
                                         if (name.text.isEmpty) {
                                           setState(() {
                                             name.text = snap.data[i]['nom'];
-                                            resultat1.text = (snap.data[i]['q_encien']).toString();
+                                            resultat1.text = (snap.data[i]
+                                                    ['q_encien'])
+                                                .toString();
                                           });
                                         } else {
                                           setState(() {
@@ -799,7 +809,8 @@ _scrolldown() {
                                               child: widget.l.fra == 1
                                                   ? Text(
                                                       "Stock:" +
-                                                          snap.data[i]['q_encien'],
+                                                          snap.data[i]
+                                                              ['q_encien'],
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
@@ -893,9 +904,10 @@ _scrolldown() {
                               child: InkWell(
                                 splashColor: Colors.white,
                                 onTap: () {
-                               showSearch(
-                            context: context,
-                               delegate: DataSearch1(name,context,widget.l,stock,resultat1));
+                                  showSearch(
+                                      context: context,
+                                      delegate: DataSearch1(name, context,
+                                          widget.l, stock, resultat1));
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1033,7 +1045,8 @@ _scrolldown() {
                                   },
                                   controller: qte,
                                   inputFormatters: [
-                                    new FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                                    new FilteringTextInputFormatter.allow(
+                                        RegExp("[0-9.]"))
                                   ],
                                   keyboardType:
                                       TextInputType.numberWithOptions(),
@@ -1115,7 +1128,8 @@ _scrolldown() {
                                   },
                                   controller: prix,
                                   inputFormatters: [
-                                    new FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                                    new FilteringTextInputFormatter.allow(
+                                        RegExp("[0-9.]"))
                                   ],
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.center,
@@ -1210,9 +1224,9 @@ _scrolldown() {
                               ),
                             ),
                             Visibility(
-                              visible:false,
-                             child: TextFormField(
-                                controller:resultat1,
+                              visible: false,
+                              child: TextFormField(
+                                controller: resultat1,
                               ),
                             ),
                             InkWell(
@@ -1220,7 +1234,7 @@ _scrolldown() {
                               onTap: () {
                                 if (widget.duree >= 0) {
                                   if (_formKey.currentState.validate()) {
-                                   dismisskeyboard();
+                                    dismisskeyboard();
                                     if (name.text.isEmpty) {
                                       Fluttertoast.showToast(
                                           msg: widget.l.fra == 1
@@ -1390,14 +1404,24 @@ _scrolldown() {
                                     ],
                                   ),
                                 )),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: InkWell(
-                              splashColor: Colors.white,
-                              onTap: () {
-Navigator.push(context,MaterialPageRoute(builder: (context)=>Nostock(l:widget.l,numero: widget.numero,duree: widget.duree,isboss: widget.isboss,worker: widget.worker,controled: widget.controled,))); 
-                              },
-                              child: Padding(
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: InkWell(
+                                splashColor: Colors.white,
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Nostock(
+                                                l: widget.l,
+                                                numero: widget.numero,
+                                                duree: widget.duree,
+                                                isboss: widget.isboss,
+                                                worker: widget.worker,
+                                                controled: widget.controled,
+                                              )));
+                                },
+                                child: Padding(
                                     padding: const EdgeInsets.only(
                                         left: 20, right: 20, bottom: 5),
                                     child: Container(
@@ -1409,7 +1433,8 @@ Navigator.push(context,MaterialPageRoute(builder: (context)=>Nostock(l:widget.l,
                                                 style: TextStyle(
                                                     fontSize: 25,
                                                     color: Colors.black,
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               )
                                             : widget.l.swa == 1
                                                 ? Text(
@@ -1427,7 +1452,8 @@ Navigator.push(context,MaterialPageRoute(builder: (context)=>Nostock(l:widget.l,
                                                             fontSize: 25,
                                                             color: Colors.black,
                                                             fontWeight:
-                                                                FontWeight.bold),
+                                                                FontWeight
+                                                                    .bold),
                                                       )
                                                     : Text(
                                                         'Nta sitoke',
@@ -1435,10 +1461,11 @@ Navigator.push(context,MaterialPageRoute(builder: (context)=>Nostock(l:widget.l,
                                                             fontSize: 25,
                                                             color: Colors.black,
                                                             fontWeight:
-                                                                FontWeight.bold),
+                                                                FontWeight
+                                                                    .bold),
                                                       ))),
+                              ),
                             ),
-                                ),
                           ],
                         )),
                   ),

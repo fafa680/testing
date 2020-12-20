@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:dropdownfield/dropdownfield.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,6 +11,7 @@ import 'ajouter1.dart';
 import 'package:flutter/services.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
+
 class Ajouter extends StatefulWidget {
   final Langue l;
   final String numero;
@@ -25,7 +25,7 @@ class _AjouterState extends State<Ajouter> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-       backgroundColor: Colors.black,
+          backgroundColor: Colors.black,
           title: Text(
             "Kakwetu",
             style: TextStyle(
@@ -124,11 +124,11 @@ class _MyformState extends State<Myform> {
   FocusNode focusnode1;
   FocusNode focusnode2;
   FocusNode focusnode3;
-   @override
+  @override
   void initState() {
     selectpays();
     getId();
-     focusnode = FocusNode();
+    focusnode = FocusNode();
     focusnode1 = FocusNode();
     focusnode2 = FocusNode();
     focusnode3 = FocusNode();
@@ -138,12 +138,14 @@ class _MyformState extends State<Myform> {
     focusnode3.addListener(() {});
     super.initState();
   }
-   dismisskeyboard() {
+
+  dismisskeyboard() {
     focusnode.unfocus();
     focusnode1.unfocus();
     focusnode2.unfocus();
     focusnode3.unfocus();
   }
+
   @override
   void dispose() {
     focusnode1.dispose();
@@ -159,26 +161,28 @@ class _MyformState extends State<Myform> {
     pays.clear();
     super.dispose();
   }
-    String idphone="";
-getId() async{
-  var deviceInfo=DeviceInfoPlugin();
-  try{
-if(Platform.isIOS){
- var iosDeviceInfo = await deviceInfo.iosInfo;
-  setState(() {
-    idphone=iosDeviceInfo.identifierForVendor;
-  });
-}else{
-  var androidDeviceInfo = await deviceInfo.androidInfo;
-  setState(() {
-    idphone=androidDeviceInfo.androidId;
-  });
-}
-  }catch(e){
-Navigator.pop(context);
+
+  String idphone = "";
+  getId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    try {
+      if (Platform.isIOS) {
+        var iosDeviceInfo = await deviceInfo.iosInfo;
+        setState(() {
+          idphone = iosDeviceInfo.identifierForVendor;
+        });
+      } else {
+        var androidDeviceInfo = await deviceInfo.androidInfo;
+        setState(() {
+          idphone = androidDeviceInfo.androidId;
+        });
+      }
+    } catch (e) {
+      Navigator.pop(context);
+    }
   }
-}
-testPass() {
+
+  testPass() {
     //on test si le password contient le chiffres et les lettres
     String al = "abcdefghijklmnopkrstuvwyxz";
     String nu = "1234567890";
@@ -302,7 +306,7 @@ testPass() {
     );
     Scaffold.of(context).showSnackBar(snackBar);
   }
- 
+
   crypterchaine(String pass) {
     String chaine = "abcdefghi0123456789jklmnopkrstuvwxyz.";
     String c;
@@ -326,109 +330,122 @@ testPass() {
     }
     return t;
   }
-static _isolate(String body){
-return jsonDecode(body);
+
+  static _isolate(String body) {
+    return jsonDecode(body);
   }
+
   bool visible1 = false;
-  insertworker(){
+  insertworker() {
     setState(() {
-     visible1=true;
-       });
+      visible1 = true;
+    });
     var url = "https://kakwetuburundifafanini.com/insert/insertw_c.php";
     try {
-      if(nom.text.isNotEmpty&&prenom.text.isNotEmpty&&(testPass()>0)&&(pass.text.length>=6)&&pay1!=""){
-http.post(url, body: {
-        "etat": etat,
-        "nom_w": nom.text.trim().replaceAll(' ', ''),
-        "nro": widget.numero,
-        "nro_w": hisnumber,
-        "pd":crypterchaine(pass.text.trim().replaceAll(' ', '')),
-        "prenom_w": prenom.text.trim().replaceAll(' ', ''),
-        "tid":idphone
-      }).then((value){
-        if(value.statusCode==200){
-           Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Ajouter1(
-                    l: widget.l,
-                    nom: nom1,
-                    prenom: prenom1,
-                    pass: pass1,
-                    nro: widget.numero,
-                    pays: pay1,
-                    idphone: idphone,
-                  )));
-                  setState(() {
+      if (nom.text.isNotEmpty &&
+          prenom.text.isNotEmpty &&
+          (testPass() > 0) &&
+          (pass.text.length >= 6) &&
+          pay1 != "") {
+        http.post(url, body: {
+          "etat": etat,
+          "nom_w": nom.text.trim().replaceAll(' ', ''),
+          "nro": widget.numero,
+          "nro_w": hisnumber,
+          "pd": crypterchaine(pass.text.trim().replaceAll(' ', '')),
+          "prenom_w": prenom.text.trim().replaceAll(' ', ''),
+          "tid": idphone
+        }).then((value) {
+          if (value.statusCode == 200) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Ajouter1(
+                          l: widget.l,
+                          nom: nom1,
+                          prenom: prenom1,
+                          pass: pass1,
+                          nro: widget.numero,
+                          pays: pay1,
+                          idphone: idphone,
+                        )));
+            setState(() {
               visible1 = false;
             });
-                 }else{
+          } else {
             setState(() {
               Fluttertoast.showToast(
-            msg: widget.l.fra == 1
-                ? "Operation Echouée"
-                : widget.l.eng == 1
-                    ? "Failed"
-                    : widget.l.swa == 1 ? "Bimekatala" : "Ntivyakunze",
-            backgroundColor: Colors.red,
-            gravity: ToastGravity.CENTER,
-            toastLength: Toast.LENGTH_LONG);
-            visible1 = false;
+                  msg: widget.l.fra == 1
+                      ? "Operation Echouée"
+                      : widget.l.eng == 1
+                          ? "Failed"
+                          : widget.l.swa == 1
+                              ? "Bimekatala"
+                              : "Ntivyakunze",
+                  backgroundColor: Colors.red,
+                  gravity: ToastGravity.CENTER,
+                  toastLength: Toast.LENGTH_LONG);
+              visible1 = false;
             });
-        }
-      });
-       setState(() {
-        nom1 = nom.text.trim().replaceAll(' ', '');
-        prenom1 = prenom.text.trim().replaceAll(' ', '');
-        pass1 =crypterchaine(pass.text.trim().replaceAll(' ', ''));
-        nom.text = "";
-        pass.text = "";
-        prenom.text = "";
-        drop.text = "";
-        passconf.text="";
-      });
-      }else{
-       setState(() {
-              Fluttertoast.showToast(
-            msg: widget.l.fra == 1
-                ? "Operation Echouée"
-                : widget.l.eng == 1
-                    ? "Failed"
-                    : widget.l.swa == 1 ? "Bimekatala" : "Ntivyakunze",
-            backgroundColor: Colors.red,
-            gravity: ToastGravity.CENTER,
-            toastLength: Toast.LENGTH_LONG);
-            visible1 = false;
-            });
-      } 
+          }
+        });
+        setState(() {
+          nom1 = nom.text.trim().replaceAll(' ', '');
+          prenom1 = prenom.text.trim().replaceAll(' ', '');
+          pass1 = crypterchaine(pass.text.trim().replaceAll(' ', ''));
+          nom.text = "";
+          pass.text = "";
+          prenom.text = "";
+          drop.text = "";
+          passconf.text = "";
+        });
+      } else {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: widget.l.fra == 1
+                  ? "Operation Echouée"
+                  : widget.l.eng == 1
+                      ? "Failed"
+                      : widget.l.swa == 1
+                          ? "Bimekatala"
+                          : "Ntivyakunze",
+              backgroundColor: Colors.red,
+              gravity: ToastGravity.CENTER,
+              toastLength: Toast.LENGTH_LONG);
+          visible1 = false;
+        });
+      }
     } catch (e) {
-     setState(() {
-              Fluttertoast.showToast(
+      setState(() {
+        Fluttertoast.showToast(
             msg: widget.l.fra == 1
                 ? "Operation Echouée"
                 : widget.l.eng == 1
                     ? "Failed"
-                    : widget.l.swa == 1 ? "Bimekatala" : "Ntivyakunze",
+                    : widget.l.swa == 1
+                        ? "Bimekatala"
+                        : "Ntivyakunze",
             backgroundColor: Colors.red,
             gravity: ToastGravity.CENTER,
             toastLength: Toast.LENGTH_LONG);
-            visible1 = false;
-            });
+        visible1 = false;
+      });
       return;
     }
   }
+
   selectpays() async {
     try {
       final response = await http
           .get("https://kakwetuburundifafanini.com/pays/selectpays.php");
-          var resultat=await compute(_isolate,response.body);
+      var resultat = await compute(_isolate, response.body);
       setState(() {
         for (int i = 0; i < resultat.length; i++) {
           setState(() {
             pays.add(resultat[i]['nom']);
           });
         }
-            _streamcontroller.add(pays);
+        _streamcontroller.add(pays);
       });
     } catch (e) {
       setState(() {
@@ -464,10 +481,12 @@ http.post(url, body: {
                           padding: const EdgeInsets.only(
                               left: 30.0, right: 30.0, top: 15),
                           child: TextFormField(
+                            autofocus: false,
                             focusNode: focusnode,
                             inputFormatters: [
-                                    new FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z.-/]"))
-                                                                 ],
+                              new FilteringTextInputFormatter.allow(
+                                  RegExp("[0-9a-zA-Z.-/]"))
+                            ],
                             controller: nom,
                             style: TextStyle(
                                 fontSize: 20,
@@ -506,10 +525,12 @@ http.post(url, body: {
                           padding: const EdgeInsets.only(
                               left: 30.0, right: 30.0, top: 15),
                           child: TextFormField(
+                            autofocus: false,
                             focusNode: focusnode1,
                             inputFormatters: [
-                                    new FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z.-/]"))
-                                                                 ],
+                              new FilteringTextInputFormatter.allow(
+                                  RegExp("[0-9a-zA-Z.-/]"))
+                            ],
                             controller: prenom,
                             style: TextStyle(
                                 fontSize: 20,
@@ -548,10 +569,13 @@ http.post(url, body: {
                           padding:
                               const EdgeInsets.only(left: 30.0, right: 30.0),
                           child: TextFormField(
+                            autofocus: false,
+                            enableInteractiveSelection: false,
                             focusNode: focusnode2,
-                           inputFormatters: [
-                                    new FilteringTextInputFormatter.deny(RegExp("[#*'\"/&();=|@]"))
-                                                                 ],
+                            inputFormatters: [
+                              new FilteringTextInputFormatter.deny(
+                                  RegExp("[#*'\"/&();=|@]"))
+                            ],
                             controller: pass,
                             style: TextStyle(
                                 fontSize: 20,
@@ -608,7 +632,7 @@ http.post(url, body: {
                                         : widget.l.swa == 1
                                             ? 'changanya takwimu na herufi'
                                             : "Teranya Ibiharuro N'idome";
-                              } else if(pass.text.length<6){
+                              } else if (pass.text.length < 6) {
                                 return widget.l.fra == 1
                                     ? 'aumoins 6 caracteres'
                                     : widget.l.eng == 1
@@ -616,7 +640,7 @@ http.post(url, body: {
                                         : widget.l.swa == 1
                                             ? 'Siyo chini ya 6'
                                             : 'Ako nigato,vyopfuma 6';
-                              }else{
+                              } else {
                                 return null;
                               }
                             },
@@ -626,10 +650,13 @@ http.post(url, body: {
                           padding:
                               const EdgeInsets.only(left: 30.0, right: 30.0),
                           child: TextFormField(
+                            autofocus: false,
+                            enableInteractiveSelection: false,
                             focusNode: focusnode3,
                             inputFormatters: [
-                                    new FilteringTextInputFormatter.deny(RegExp("[#*'\"/&();=|@]"))
-                                                                 ],
+                              new FilteringTextInputFormatter.deny(
+                                  RegExp("[#*'\"/&();=|@]"))
+                            ],
                             controller: passconf,
                             style: TextStyle(
                                 fontSize: 20,
@@ -640,12 +667,12 @@ http.post(url, body: {
                             maxLength: 15,
                             decoration: InputDecoration(
                                 labelText: widget.l.fra == 1
-                                    ? "Confirmez"
+                                    ? "Confirmer"
                                     : widget.l.eng == 1
                                         ? "Confirm"
                                         : widget.l.swa == 1
                                             ? "Thibitisha"
-                                            : "Subiramwo",
+                                            : "Risubiremwo",
                                 border: OutlineInputBorder(),
                                 labelStyle: TextStyle(
                                     color: Colors.black,
@@ -681,41 +708,58 @@ http.post(url, body: {
                                 return null;
                               } else if (snap.hasData) {
                                 return Padding(
-                                  padding: const EdgeInsets.all(2),
+                                  padding: const EdgeInsets.only(
+                                      left: 15, right: 15),
                                   child: Card(
-                                    color: Colors.amber,
+                                    color: Colors.green,
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(
                                         side: BorderSide(
-                                            color: Colors.lightBlue, width: 2),
+                                            color: Colors.red, width: 3),
                                         borderRadius:
                                             BorderRadius.circular(15)),
-                                    child: DropDownField(
-                                      inputFormatters: [
-                                    new FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z.-/]"))
-                                                                 ],
-                                      onValueChanged: (v) {
+                                    child: DropdownButtonFormField(
+                                      autofocus: false,
+                                      autovalidate: false,
+                                      isDense: true,
+                                      isExpanded: true,
+                                      dropdownColor: Colors.black,
+                                      value: pay1,
+                                      items: snap.data.map((e) {
+                                        return DropdownMenuItem(
+                                          child: Center(
+                                            child: new Text(
+                                              e,
+                                              style: TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          value: e,
+                                        );
+                                      }).toList(),
+                                      onChanged: (v) {
                                         setState(() {
                                           pay1 = v;
+                                          dismisskeyboard();
                                         });
                                       },
-                                      controller: drop,
-                                      textStyle: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                      labelText: widget.l.fra == 1
-                                          ? "Pays"
-                                          : widget.l.eng == 1
-                                              ? "Country"
-                                              : widget.l.swa == 1
-                                                  ? "Nchi"
-                                                  : "Igihugu",
-                                      labelStyle: TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: 20,
-                                          fontStyle: FontStyle.italic),
-                                      strict: false,
-                                      items: pays,
+                                      hint: Center(
+                                        child: Text(
+                                          widget.l.fra == 1
+                                              ? "Dans quel Pays ?"
+                                              : widget.l.eng == 1
+                                                  ? "In Which Country ?"
+                                                  : widget.l.swa == 1
+                                                      ? "Nchi gani ?"
+                                                      : "Ikihe gihugu ?",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 );
@@ -725,15 +769,15 @@ http.post(url, body: {
                               }
                             }),
                         SizedBox(
-                          height: 10,
+                          height: 20,
                         ),
                         InkWell(
-                          splashColor:Colors.white,
+                          splashColor: Colors.white,
                           onTap: () {
                             if (_formKey.currentState.validate()) {
                               dismisskeyboard();
                               getId();
-                              if (pay1!="") {
+                              if (pay1 != "") {
                                 insertworker();
                               } else {
                                 snackabardropimpty();
@@ -781,15 +825,13 @@ http.post(url, body: {
                         Padding(
                           padding: const EdgeInsets.all(3.0),
                           child: Visibility(
-                            visible: visible1,
-                            child:Center(
-                                        child: LinearProgressIndicator(
-                                      backgroundColor: Colors.cyanAccent,
-                                      valueColor:
-                                          new AlwaysStoppedAnimation<Color>(
-                                              Colors.red),
-                                    ))
-                          ),
+                              visible: visible1,
+                              child: Center(
+                                  child: LinearProgressIndicator(
+                                backgroundColor: Colors.cyanAccent,
+                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                    Colors.red),
+                              ))),
                         ),
                         Padding(
                             padding: const EdgeInsets.all(2),

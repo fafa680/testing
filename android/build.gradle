@@ -1,20 +1,23 @@
 buildscript {
-    ext.kotlin_version = '1.3.50'
+    ext.kotlin_version = '1.3.72'
     repositories {
         google()
         jcenter()
         maven{
             url "https://plugins.gradle.org/m2/"
         }
+        maven { url "https://maven.fabric.io/public" }
+        maven { url "https://maven.google.com"}
     }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+     dependencies {
+        classpath 'com.android.tools.build:gradle:4.1.0'
         classpath 'gradle.plugin.chrisney:enigma:1.0.0.8'
+         classpath 'com.tencent.mm:AndResGuard-gradle-plugin:1.2.20'
+         classpath 'io.fabric.tools:gradle:1.31.1'
+         classpath 'io.michaelrocks:paranoid-gradle-plugin:0.3.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
-
 allprojects {
     repositories {
         google()
@@ -23,15 +26,17 @@ allprojects {
         maven { url 'http://maven.usehover.com/releases' }
     }
 }
-
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
-    project.evaluationDependsOn(':app')
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+repositories {
+  jcenter()
+  maven { url 'https://maven.fabric.io/public' }
+}
+
+

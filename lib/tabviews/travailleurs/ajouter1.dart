@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'package:dropdownfield/dropdownfield.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import '../../page3.dart';
 import 'package:flutter/foundation.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 class Ajouter1 extends StatefulWidget {
   final Langue l;
   final String nom;
@@ -17,7 +18,14 @@ class Ajouter1 extends StatefulWidget {
   final String pays;
   final String idphone;
   Ajouter1(
-      {Key key, this.l, this.nom, this.prenom, this.pass, this.nro, this.pays,this.idphone})
+      {Key key,
+      this.l,
+      this.nom,
+      this.prenom,
+      this.pass,
+      this.nro,
+      this.pays,
+      this.idphone})
       : super(key: key);
 
   @override
@@ -60,15 +68,17 @@ class _Ajouter1State extends State<Ajouter1> {
     selectoperator();
     super.initState();
   }
-  static _isolate1(String body){
-return jsonDecode(body);
+
+  static _isolate1(String body) {
+    return jsonDecode(body);
   }
+
   selectoperator() async {
     try {
       final response = await http.post(
           "https://kakwetuburundifafanini.com/get/selectoperatordepays.php",
           body: {"pays": widget.pays});
-           var resultat=await compute(_isolate1,response.body);
+      var resultat = await compute(_isolate1, response.body);
       setState(() {
         for (int i = 0; i < resultat.length; i++) {
           setState(() {
@@ -89,16 +99,15 @@ return jsonDecode(body);
       final response = await http.post(
           "https://kakwetuburundifafanini.com/get/selecttypepayementdeoperateu.php",
           body: {"imihora": imihora});
-          var resultat=jsonDecode(response.body);
+      var resultat = jsonDecode(response.body);
       setState(() {
         _streamcontroller.add(resultat);
       });
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   String id2 = "";
- selecttypeworkerexist() async {
+  selecttypeworkerexist() async {
     try {
       final response = await http.post(
           "https://kakwetuburundifafanini.com/get/selecttypeworkerexist.php",
@@ -107,11 +116,11 @@ return jsonDecode(body);
             "pd": widget.pass,
             "prenom_w": widget.prenom,
             "nro": widget.nro,
-            "tid":widget.idphone,
-            "nro_w":"",
-            "etat":""
+            "tid": widget.idphone,
+            "nro_w": "",
+            "etat": ""
           });
-            var resultat=await compute(_isolate1,response.body);
+      var resultat = await compute(_isolate1, response.body);
       setState(() {
         if (resultat.length == 0) {
           Fluttertoast.showToast(
@@ -193,7 +202,7 @@ return jsonDecode(body);
       final response = await http.post(
           "https://kakwetuburundifafanini.com/first/checkdoublenumworker.php",
           body: {"nro_w": ynumero});
-        var resultat=await compute(_isolate1,response.body);
+      var resultat = await compute(_isolate1, response.body);
       if (resultat.length == 0) {
       } else {
         Fluttertoast.showToast(
@@ -232,7 +241,7 @@ return jsonDecode(body);
   }
 
   bool visible1 = false;
-  addechecpayement(){
+  addechecpayement() {
     setState(() {
       visible1 = true;
     });
@@ -247,42 +256,42 @@ return jsonDecode(body);
             "op": imihora,
             "pays": widget.pays,
             "motant": montant,
-          }).then((value){
-            if(value.statusCode==200){
-             setState(() {
-        visible1 = false;
-        _actionResponse = "";
-        amount.text = "";
-        pop = true;
-        Fluttertoast.showToast(
-            msg: widget.l.fra == 1
-                ? "Réessayez Encore"
-                : widget.l.eng == 1
-                    ? "Retry Once Again"
-                    : widget.l.swa == 1
-                        ? "jaribu tena"
-                        : "Mugerageze kandi",
-            backgroundColor: Colors.red,
-            gravity: ToastGravity.CENTER,
-            toastLength: Toast.LENGTH_LONG);
-      });
-            }else{
-setState(() {
-        visible1 = false;
-        Fluttertoast.showToast(
-            msg: widget.l.fra == 1
-                ? "Echec,Acceptez encore"
-                : widget.l.eng == 1
-                    ? "Failed,Accept Once again"
-                    : widget.l.swa == 1
-                        ? "Bimekatala,Kubari tena"
-                        : "Ntivyakunze,Emeza kandi",
-            backgroundColor: Colors.red,
-            gravity: ToastGravity.CENTER,
-            toastLength: Toast.LENGTH_LONG);
-      });
-            }
+          }).then((value) {
+        if (value.statusCode == 200) {
+          setState(() {
+            visible1 = false;
+            _actionResponse = "";
+            amount.text = "";
+            pop = true;
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Réessayez Encore"
+                    : widget.l.eng == 1
+                        ? "Retry Once Again"
+                        : widget.l.swa == 1
+                            ? "jaribu tena"
+                            : "Mugerageze kandi",
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
           });
+        } else {
+          setState(() {
+            visible1 = false;
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Echec,Acceptez encore"
+                    : widget.l.eng == 1
+                        ? "Failed,Accept Once again"
+                        : widget.l.swa == 1
+                            ? "Bimekatala,Kubari tena"
+                            : "Ntivyakunze,Emeza kandi",
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
+          });
+        }
+      });
     } catch (e) {
       setState(() {
         visible1 = false;
@@ -324,63 +333,62 @@ setState(() {
     return n;
   }
 
-  updateworkernumero(){
+  updateworkernumero() {
     setState(() {
       visible1 = true;
     });
     try {
-      http.post(
-          "https://kakwetuburundifafanini.com/update/updatew_cnumero.php",
+      http.post("https://kakwetuburundifafanini.com/update/updatew_cnumero.php",
           body: {
             "nom_w": widget.nom,
             "nro": widget.nro,
             "nro_w": numero,
             "pd": widget.pass,
             "prenom_w": widget.prenom,
-            "etat":"changed",
+            "etat": "changed",
             "numero": numero,
             "sme": montant,
             "pays": widget.pays,
             "dre": dure,
-            "tid":widget.idphone
-          }).then((value){
-            if(value.statusCode==200){
- setState(() {
-        _actionResponse = "";
-        visible1 = false;
-        pop = true;
-        Fluttertoast.showToast(
-            msg: widget.l.fra == 1
-                ? "Bien Fait"
-                : widget.l.eng == 1
-                    ? "Done"
-                    : widget.l.swa == 1
-                        ? "Umeweza"
-                        : "Vyakunze",
-            backgroundColor: Colors.black,
-            gravity: ToastGravity.CENTER,
-            toastLength: Toast.LENGTH_LONG);
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
-      });
-            }else{
-setState(() {
-        visible1 = false;
-        Fluttertoast.showToast(
-            msg: widget.l.fra == 1
-                ? "Echec,Acceptez encore"
-                : widget.l.eng == 1
-                    ? "Failed,Accept Once again"
-                    : widget.l.swa == 1
-                        ? "Bimekatala,Kubari tena"
-                        : "Ntivyakunze,Emeza kandi",
-            backgroundColor: Colors.red,
-            gravity: ToastGravity.CENTER,
-            toastLength: Toast.LENGTH_LONG);
-      });
-            }
+            "tid": widget.idphone
+          }).then((value) {
+        if (value.statusCode == 200) {
+          setState(() {
+            _actionResponse = "";
+            visible1 = false;
+            pop = true;
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Bien Fait"
+                    : widget.l.eng == 1
+                        ? "Done"
+                        : widget.l.swa == 1
+                            ? "Umeweza"
+                            : "Vyakunze",
+                backgroundColor: Colors.black,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
           });
+        } else {
+          setState(() {
+            visible1 = false;
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Echec,Acceptez encore"
+                    : widget.l.eng == 1
+                        ? "Failed,Accept Once again"
+                        : widget.l.swa == 1
+                            ? "Bimekatala,Kubari tena"
+                            : "Ntivyakunze,Emeza kandi",
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
+          });
+        }
+      });
     } catch (e) {
       setState(() {
         visible1 = false;
@@ -440,15 +448,14 @@ setState(() {
     return a1;
   }
 
-  Future<dynamic> ecobank(var phoneNumber, amount) async {
+  Future<dynamic> nk(var phoneNumber, amount) async {
     var sendMap = <String, dynamic>{
       'numero': phoneNumber,
       'montant': amount,
     };
-// response waits for result from java code
     String response = "";
     try {
-      final String result = await _hover.invokeMethod('ecobank', sendMap);
+      final String result = await _hover.invokeMethod('nk', sendMap);
       setState(() {
         response = result;
       });
@@ -460,15 +467,14 @@ setState(() {
     });
   }
 
-  Future<dynamic> bbci(var phoneNumber, amount) async {
+  Future<dynamic> ci(var phoneNumber, amount) async {
     var sendMap = <String, dynamic>{
       'numero': phoneNumber,
       'montant': amount,
     };
-// response waits for result from java code
     String response = "";
     try {
-      final String result = await _hover.invokeMethod('bbci', sendMap);
+      final String result = await _hover.invokeMethod('ci', sendMap);
       setState(() {
         response = result;
       });
@@ -480,15 +486,14 @@ setState(() {
     });
   }
 
-  Future<dynamic> bancobu(var phoneNumber, amount) async {
+  Future<dynamic> bu(var phoneNumber, amount) async {
     var sendMap = <String, dynamic>{
       'numero': phoneNumber,
       'montant': amount,
     };
-// response waits for result from java code
     String response = "";
     try {
-      final String result = await _hover.invokeMethod('bancobu', sendMap);
+      final String result = await _hover.invokeMethod('bu', sendMap);
       setState(() {
         response = result;
       });
@@ -500,15 +505,14 @@ setState(() {
     });
   }
 
-  Future<dynamic> ecocash(var phoneNumber, amount) async {
+  Future<dynamic> ec(var phoneNumber, amount) async {
     var sendMap = <String, dynamic>{
       'numero': phoneNumber,
       'montant': amount,
     };
-// response waits for result from java code
     String response = "";
     try {
-      final String result = await _hover.invokeMethod('ecocash', sendMap);
+      final String result = await _hover.invokeMethod('ec', sendMap);
       setState(() {
         response = result;
       });
@@ -520,16 +524,15 @@ setState(() {
     });
   }
 
-  Future<dynamic> lumicash(var phoneNumber, amount, aide) async {
+  Future<dynamic> mi(var phoneNumber, amount, aide) async {
     var sendMap = <String, dynamic>{
       'numero': phoneNumber,
       'montant': amount,
-      'object': aide,
+      'objet': aide,
     };
-// response waits for result from java code
     String response = "";
     try {
-      final String result = await _hover.invokeMethod('lumicash', sendMap);
+      final String result = await _hover.invokeMethod('mi', sendMap);
       setState(() {
         response = result;
       });
@@ -539,6 +542,17 @@ setState(() {
     setState(() {
       _actionResponse = response;
     });
+  }
+
+  update() {
+    String pa = "com.nini.fafa";
+    try {
+      launch("market://details?id=" + pa);
+    } on PlatformException catch (e) {
+      launch("https://play.google.com/store/apps/details?id=" + pa);
+    } finally {
+      launch("https://play.google.com/store/apps/details?id=" + pa);
+    }
   }
 
   snackabarfauxop() {
@@ -681,12 +695,6 @@ setState(() {
           )
         ],
       ),
-      // action: SnackBarAction(
-      //   label: 'Undo',
-      //   onPressed: () {
-
-      //   },
-      // ),
     );
     Scaffold.of(context).showSnackBar(snackBar);
   }
@@ -721,8 +729,8 @@ setState(() {
                             return null;
                           } else if (snap.hasData) {
                             return Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20,bottom: 8.0),
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, bottom: 8.0),
                               child: Card(
                                 color: Colors.amber,
                                 elevation: 0,
@@ -732,8 +740,27 @@ setState(() {
                                     borderRadius: BorderRadius.circular(15)),
                                 child: Visibility(
                                   visible: _actionResponse != "" ? false : true,
-                                  child: DropDownField(
-                                    onValueChanged: (v) {
+                                  child: DropdownButtonFormField(
+                                    autofocus: false,
+                                    autovalidate: false,
+                                    isDense: true,
+                                    isExpanded: true,
+                                    dropdownColor: Colors.black,
+                                    items: snap.data.map((e) {
+                                      return DropdownMenuItem(
+                                        child: Center(
+                                          child: new Text(
+                                            e,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        value: e,
+                                      );
+                                    }).toList(),
+                                    onChanged: (v) {
                                       setState(() {
                                         selecttypepayementdeoperateur(v);
                                         imihora = v;
@@ -741,23 +768,21 @@ setState(() {
                                         _actionResponse = "";
                                       });
                                     },
-                                    controller: drop,
-                                    textStyle: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                    labelText: widget.l.fra == 1
-                                        ? "Réseau"
-                                        : widget.l.eng == 1
-                                            ? "Network"
-                                            : widget.l.swa == 1
-                                                ? "Mtandao"
-                                                : "Umuhora",
-                                    labelStyle: TextStyle(
-                                        color: Colors.blue,
-                                        fontSize: 20,
-                                        fontStyle: FontStyle.italic),
-                                    strict: false,
-                                    items: operateurs,
+                                    hint: Center(
+                                      child: Text(
+                                        widget.l.fra == 1
+                                            ? "Réseau"
+                                            : widget.l.eng == 1
+                                                ? "Network"
+                                                : widget.l.swa == 1
+                                                    ? "Mtandao"
+                                                    : "Umuhora",
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -781,7 +806,7 @@ setState(() {
                           child: ListView.builder(
                               controller: _scrollcontroller,
                               scrollDirection: Axis.horizontal,
-                              itemCount:snap.data.length,
+                              itemCount: snap.data.length,
                               itemBuilder: (context, i) {
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -793,7 +818,8 @@ setState(() {
                                       onTap: () {
                                         setState(() {
                                           widget.l.fra == 1
-                                              ? amount.text = snap.data[i]['mtt'] +
+                                              ? amount.text = snap.data[i]
+                                                      ['mtt'] +
                                                   " de " +
                                                   snap.data[i]['dre'] +
                                                   " Jours"
@@ -804,12 +830,12 @@ setState(() {
                                                       snap.data[i]['dre'] +
                                                       " Days"
                                                   : widget.l.swa == 1
-                                                      ? amount.text = snap.data[i]
-                                                              ['mtt'] +
+                                                      ? amount.text = snap
+                                                              .data[i]['mtt'] +
                                                           " Ya Siku " +
                                                           snap.data[i]['dre']
-                                                      : amount.text = snap.data[i]
-                                                              ['mtt'] +
+                                                      : amount.text = snap
+                                                              .data[i]['mtt'] +
                                                           " Mumisi " +
                                                           snap.data[i]['dre'];
                                           messagepay1 = decrypterchaine(
@@ -836,7 +862,8 @@ setState(() {
                                               borderRadius:
                                                   BorderRadius.circular(5)),
                                           child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               Padding(
                                                 padding:
@@ -867,9 +894,8 @@ setState(() {
                                                         ? Text("Amount: " + snap.data[i]['mtt'],
                                                             style: TextStyle(
                                                                 fontSize: 20,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
+                                                                fontWeight: FontWeight
+                                                                    .bold,
                                                                 color: Colors
                                                                     .white))
                                                         : widget.l.swa == 1
@@ -886,8 +912,7 @@ setState(() {
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         20,
-                                                                    fontWeight:
-                                                                        FontWeight.bold,
+                                                                    fontWeight: FontWeight.bold,
                                                                     color: Colors.white)),
                                               ),
                                               Padding(
@@ -920,12 +945,9 @@ setState(() {
                                                                             .bold,
                                                                     color: Colors
                                                                         .white))
-                                                            : Text("Imisi " + snap.data[i]['dre'],
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        20,
-                                                                    fontWeight: FontWeight.bold,
-                                                                    color: Colors.white)),
+                                                            : Text(
+                                                                "Imisi " + snap.data[i]['dre'],
+                                                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
                                               ),
                                             ],
                                           ),
@@ -953,7 +975,7 @@ setState(() {
                     ListView(scrollDirection: Axis.vertical, children: <Widget>[
                   Container(
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 20,right: 20),
+                      padding: const EdgeInsets.only(left: 20, right: 20),
                       child: Card(
                         elevation: 0,
                         color: Colors.green,
@@ -1009,25 +1031,26 @@ setState(() {
                                               .contains(messagepay2)) {
                                         updateworkernumero();
                                       } else if (_actionResponse.isEmpty) {
-                                        if (drop.text.isEmpty) {
+                                        if (imihora == "") {
                                           snackabarfauxop();
                                         } else if (amount.text.isEmpty) {
                                           snackabarfauxpa();
                                         } else {
                                           if (modepayement == "lumicash") {
-                                            lumicash(phone, montant,
-                                                "Encouragement");
+                                            mi(phone, montant, "Encouragement");
                                           } else if (modepayement ==
                                               "ecocash") {
-                                            ecocash(phone, montant);
+                                            ec(phone, montant);
                                           } else if (modepayement == "mcash") {
-                                            bancobu(phone, montant);
+                                            bu(phone, montant);
                                           } else if (modepayement ==
                                               "fonecash") {
-                                            bbci(phone, montant);
+                                            ci(phone, montant);
                                           } else if (modepayement ==
                                               "ecobankpay") {
-                                            ecobank(phone, montant);
+                                            nk(phone, montant);
+                                          } else {
+                                            update();
                                           }
                                         }
                                       } else {

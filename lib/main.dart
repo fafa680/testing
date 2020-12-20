@@ -14,12 +14,14 @@ import 'package:flutter_offline/flutter_offline.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakwetu/page4.dart';
 import 'package:kakwetu/sqldb.dart';
+
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     home: Page1(),
   ));
 }
+
 class Page1 extends StatefulWidget {
   final Langue l;
   Page1({Key key, this.l}) : super(key: key);
@@ -27,6 +29,7 @@ class Page1 extends StatefulWidget {
   @override
   _Page1State createState() => _Page1State();
 }
+
 class _Page1State extends State<Page1> {
   TextEditingController pass = new TextEditingController();
   TextEditingController number = new TextEditingController();
@@ -63,6 +66,7 @@ class _Page1State extends State<Page1> {
     number.dispose();
     super.dispose();
   }
+
   final _formKey = GlobalKey<FormState>();
   int k = 1;
   int s = 0;
@@ -137,25 +141,28 @@ class _Page1State extends State<Page1> {
 
   bool visible1 = false;
   bool visible2 = false;
-  String franc="";
-  String engr="";
-  String swahi="";
-  String kirund="";
-  static _isolate(String body){
-return jsonDecode(body);
+  String franc = "";
+  String engr = "";
+  String swahi = "";
+  String kirund = "";
+  static _isolate(String body) {
+    return jsonDecode(body);
   }
-Future selectpublicites() async {
+
+  Future selectpublicites() async {
     try {
-      final response = await http.get("https://kakwetuburundifafanini.com/first/firstcheckpublicites.php");
-var resultat=jsonDecode(response.body);
+      final response = await http.get(
+          "https://kakwetuburundifafanini.com/first/firstcheckpublicites.php");
+      var resultat = jsonDecode(response.body);
       setState(() {
-        franc=resultat[0]['fra'];
-        engr=resultat[0]['eng'];
-        swahi=resultat[0]['swahili'];
-        kirund=resultat[0]['kirundi'];
+        franc = resultat[0]['fra'];
+        engr = resultat[0]['eng'];
+        swahi = resultat[0]['swahili'];
+        kirund = resultat[0]['kirundi'];
       });
     } catch (e) {}
   }
+
   void launchWhatsApp({
     @required String phone,
     @required String message,
@@ -224,6 +231,7 @@ var resultat=jsonDecode(response.body);
     }
     return t;
   }
+
   String etat = "";
   selectetatworker(String numero) async {
     try {
@@ -231,13 +239,14 @@ var resultat=jsonDecode(response.body);
           .post("https://kakwetuburundifafanini.com/get/getetat.php", body: {
         "nro_w": numero,
       });
- var resultat=await compute(_isolate,response.body);
+      var resultat = await compute(_isolate, response.body);
       setState(() {
-        etat =resultat[0]['etat'].toString();
+        etat = resultat[0]['etat'].toString();
       });
     } catch (e) {}
   }
-  addjournal(String nume){
+
+  addjournal(String nume) {
     try {
       http.post("https://kakwetuburundifafanini.com/add/addjournal.php",
           body: {"nro": nume, "etat": "1"});
@@ -255,13 +264,14 @@ var resultat=jsonDecode(response.body);
           body: {
             "nro_w": numero,
           });
-var resultat=await compute(_isolate,response.body);
-      if (resultat.length == 0) {
+      var resultat = await compute(_isolate, response.body);
+      if (resultat.length == 0 && response.statusCode == 200) {
       } else {
         addjournal(resultat[0]['nro_w']);
       }
     } catch (e) {}
   }
+
   loginbossnumero(String numero) async {
     try {
       final response = await http.post(
@@ -269,8 +279,8 @@ var resultat=await compute(_isolate,response.body);
           body: {
             "nro": numero,
           });
-var resultat=await compute(_isolate,response.body);
-      if (resultat.length == 0) {
+      var resultat = await compute(_isolate, response.body);
+      if (resultat.length == 0 && response.statusCode == 200) {
         loginworkernumero(numero);
       } else {
         addjournal(resultat[0]['nro']);
@@ -286,8 +296,8 @@ var resultat=await compute(_isolate,response.body);
             "nro_w": numero,
             "pd": crypterchaine(pass.text.trim().replaceAll(' ', '')),
           });
- var resultat=await compute(_isolate,response.body);
-      if (resultat.length == 0) {
+      var resultat = await compute(_isolate, response.body);
+      if (resultat.length == 0 && response.statusCode == 200) {
         if (test2 == 0) {
           addjournal(mynumber);
         }
@@ -343,8 +353,8 @@ var resultat=await compute(_isolate,response.body);
             "nro": numero,
             "pd": crypterchaine(pass.text.trim().replaceAll(' ', '')),
           });
-  var resultat=await compute(_isolate,response.body);
-      if (resultat.length == 0) {
+      var resultat = await compute(_isolate, response.body);
+      if (resultat.length == 0 && response.statusCode == 200) {
         loginworker(numero);
       } else {
         setState(() {
@@ -386,8 +396,8 @@ var resultat=await compute(_isolate,response.body);
             "nro_w": numero,
             "pd": crypterchaine(pass.text.trim().replaceAll(' ', '')),
           });
-   var resultat=await compute(_isolate,response.body);
-      if (resultat.length == 0) {
+      var resultat = await compute(_isolate, response.body);
+      if (resultat.length == 0 && visible2 == true) {
         if (test == 0) {
           loginbossnumero(numero);
         }
@@ -433,6 +443,7 @@ var resultat=await compute(_isolate,response.body);
           help = true;
           pass.text = "";
           number.text = "";
+          etat = "";
           visible1 = false;
           visible2 = false;
         });
@@ -458,8 +469,8 @@ var resultat=await compute(_isolate,response.body);
             "nro": numero,
             "pd": crypterchaine(pass.text.trim().replaceAll(' ', '')),
           });
-var resultat=await compute(_isolate,response.body);
-      if (resultat.length == 0) {
+      var resultat = await compute(_isolate, response.body);
+      if (resultat.length == 0 && response.statusCode == 200) {
         loginworkernew(numero);
       } else {
         if (mynumber == "") {
@@ -603,7 +614,10 @@ var resultat=await compute(_isolate,response.body);
                                                   if (pass.text != "") {
                                                     if (mynumber != "") {
                                                       if (test2 <= 3) {
-                                                        loginboss(mynumber);
+                                                        if (visible2 == false &&
+                                                            help == true) {
+                                                          loginboss(mynumber);
+                                                        }
                                                       } else {
                                                         setState(() {
                                                           help = true;
@@ -768,6 +782,8 @@ var resultat=await compute(_isolate,response.body);
                                                     right: 8.0,
                                                     top: 8),
                                                 child: TextFormField(
+                                                  enableInteractiveSelection:
+                                                      false,
                                                   focusNode: focusnode1,
                                                   inputFormatters: [
                                                     new FilteringTextInputFormatter
@@ -784,7 +800,7 @@ var resultat=await compute(_isolate,response.body);
                                                   textAlign: TextAlign.center,
                                                   maxLength: 25,
                                                   decoration: InputDecoration(
-                                                    prefixIcon: Icon(
+                                                      prefixIcon: Icon(
                                                         Icons.account_box,
                                                         color: Colors.black,
                                                       ),
@@ -820,6 +836,8 @@ var resultat=await compute(_isolate,response.body);
                                                 padding: const EdgeInsets.only(
                                                     left: 8.0, right: 8.0),
                                                 child: TextFormField(
+                                                  enableInteractiveSelection:
+                                                      false,
                                                   focusNode: focusnode,
                                                   inputFormatters: [
                                                     new FilteringTextInputFormatter
@@ -906,13 +924,17 @@ var resultat=await compute(_isolate,response.body);
                                                     if (_formKey.currentState
                                                         .validate()) {
                                                       if (test <= 3) {
-                                                        loginbossnew(crypterchaine(
-                                                            rechangernumero(
-                                                                number.text
-                                                                    .trim()
-                                                                    .replaceAll(
-                                                                        ' ',
-                                                                        ''))));
+                                                        if (visible1 == false &&
+                                                            visible2 == false) {
+                                                          loginbossnew(crypterchaine(
+                                                              rechangernumero(
+                                                                  number
+                                                                      .text
+                                                                      .trim()
+                                                                      .replaceAll(
+                                                                          ' ',
+                                                                          ''))));
+                                                        }
                                                       } else {
                                                         setState(() {
                                                           test = test + 1;
@@ -1096,8 +1118,8 @@ var resultat=await compute(_isolate,response.body);
                                             Image.asset("assets/whatsapp.png"),
                                         onPressed: () {
                                           launchWhatsApp(
-                                              phone: "+25769927086",
-                                              message: "my name is fabien");
+                                              phone: "+25762111577",
+                                              message: "");
                                         }),
                                   ],
                                 ),
@@ -1116,65 +1138,56 @@ var resultat=await compute(_isolate,response.body);
                                               borderRadius:
                                                   BorderRadius.circular(15)),
                                           child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: f == 1
-                                                      ? Text(
-                                                          franc, //message from database
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.yellow,
-                                                              fontSize: 20,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        )
-                                                      : e == 1
-                                                          ? Text(
-                                                             engr, //message from database
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .yellow,
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                            )
-                                                          : s == 1
-                                                              ? Text(
-                                                                 swahi, //message from database
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .yellow,
-                                                                      fontSize:
-                                                                          20,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                )
-                                                              : Text(
-                                                                 kirund, //message from database
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .yellow,
-                                                                      fontSize:
-                                                                          20,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                ),
-                                                ))),
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: f == 1
+                                                ? Text(
+                                                    franc, //message from database
+                                                    style: TextStyle(
+                                                        color: Colors.yellow,
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                    textAlign: TextAlign.center,
+                                                  )
+                                                : e == 1
+                                                    ? Text(
+                                                        engr, //message from database
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.yellow,
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      )
+                                                    : s == 1
+                                                        ? Text(
+                                                            swahi, //message from database
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .yellow,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          )
+                                                        : Text(
+                                                            kirund, //message from database
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .yellow,
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                          ))),
                                 ),
                                 SizedBox(
                                   height: 20,

@@ -50,27 +50,29 @@ class _RapportState extends State<Rapport> {
   }
 
   var rapport = [];
-selectrapport() async {
+  selectrapport() async {
     try {
       final response = await http.post(
           "https://kakwetuburundifafanini.com/gra/selectrapport.php",
           body: {
             "nro": widget.numero,
           });
-      var resultat=await compute(_isolate,response.body);
+      var resultat = await compute(_isolate, response.body);
       setState(() {
-      _streamcontroller.add(resultat);
-        rapport =resultat;
+        _streamcontroller.add(resultat);
+        rapport = resultat;
       });
     } catch (e) {
       setState(() {
-       rapport= [];
+        rapport = [];
       });
     }
   }
-   static _isolate(String body){
-return jsonDecode(body);
+
+  static _isolate(String body) {
+    return jsonDecode(body);
   }
+
   bool _isontop = true;
   _scrolltop() {
     _scrollcontroller.animateTo(_scrollcontroller.position.minScrollExtent,
@@ -82,14 +84,15 @@ return jsonDecode(body);
 
   _scrolldown() {
     _scrollcontroller.animateTo(_scrollcontroller.position.maxScrollExtent,
-        duration: Duration(seconds:rapport.isEmpty ? 1 : (rapport.length*4)),
+        duration: Duration(seconds: rapport.isEmpty ? 1 : (rapport.length * 4)),
         curve: Curves.easeOut);
     setState(() {
       _isontop = false;
     });
   }
-bool ispop = true;
-void messagevalidation1() {
+
+  bool ispop = true;
+  void messagevalidation1() {
     AlertDialog alerte = new AlertDialog(
       content: widget.l.fra == 1
           ? Text("Vous Voulez Fermer Tout ?",
@@ -106,8 +109,7 @@ void messagevalidation1() {
                       color: Colors.green),
                   textAlign: TextAlign.center)
               : widget.l.swa == 1
-                  ? Text(
-                      "Unataka Kufunga vyote ?",
+                  ? Text("Unataka Kufunga vyote ?",
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -124,10 +126,7 @@ void messagevalidation1() {
       actions: <Widget>[
         MaterialButton(
           onPressed: () {
-            setState(() {
-              ispop=true;
-               Navigator.pop(context);
-            });
+            Navigator.pop(context);
           },
           child: widget.l.fra == 1
               ? Text("Non",
@@ -159,11 +158,8 @@ void messagevalidation1() {
         ),
         MaterialButton(
           onPressed: () {
-            setState(() {
-              ispop=true;
-          Navigator.pop(context);
-           Navigator.pop(context);
-            });
+            Navigator.pop(context);
+            Navigator.pop(context);
           },
           child: widget.l.fra == 1
               ? Text("Oui",
@@ -202,19 +198,23 @@ void messagevalidation1() {
         });
     //return;
   }
-  Future<bool>_willpop() async{
+
+  Future<bool> _willpop() async {
     return Future.value(ispop);
   }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if(ispop){
+        if (ispop) {
           messagevalidation1();
+        } else {
+          return _willpop();
         }
-        return _willpop();
+        return null;
       },
-          child: Column(
+      child: Column(
         children: [
           StreamBuilder<List>(
               stream: _streamcontroller.stream,
@@ -231,11 +231,10 @@ void messagevalidation1() {
                                   child: ListView.builder(
                                       controller: _scrollcontroller,
                                       physics: BouncingScrollPhysics(),
-                                      itemCount:
-                                          snap.data.length,
+                                      itemCount: snap.data.length,
                                       itemBuilder: (context, i) {
                                         return InkWell(
-                                          splashColor:Colors.white,
+                                          splashColor: Colors.white,
                                           onTap: () {
                                             if (tous) {
                                               setState(() {
@@ -258,8 +257,8 @@ void messagevalidation1() {
                                             child: Column(
                                               children: [
                                                 Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(8.0),
+                                                    padding: const EdgeInsets.all(
+                                                        8.0),
                                                     child: widget.l.fra == 1
                                                         ? snap.data[i]['jour']
                                                                     .toString() ==
@@ -269,19 +268,15 @@ void messagevalidation1() {
                                                                     snap.data[i]
                                                                         ['dat'],
                                                                 style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
+                                                                    fontWeight: FontWeight
+                                                                        .bold,
                                                                     color: Colors
                                                                         .white))
-                                                            : snap.data[i]['jour']
-                                                                        .toString() ==
+                                                            : snap.data[i]['jour'].toString() ==
                                                                     '2'
                                                                 ? Text("Lundi le " + snap.data[i]['dat'],
                                                                     style: TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
+                                                                        fontWeight: FontWeight.bold,
                                                                         color: Colors.white))
                                                                 : snap.data[i]['jour'].toString() == '3'
                                                                     ? Text("Mardi le " + snap.data[i]['dat'], style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))
@@ -385,7 +380,8 @@ void messagevalidation1() {
                                                                       ['total'],
                                                           style: TextStyle(
                                                               fontWeight:
-                                                                  FontWeight.bold,
+                                                                  FontWeight
+                                                                      .bold,
                                                               fontSize: 30,
                                                               color:
                                                                   Colors.white),
@@ -400,7 +396,9 @@ void messagevalidation1() {
                                                                           .toStringAsFixed(
                                                                               0)
                                                                   : "Total: " +
-                                                                      snap.data[i][
+                                                                      snap.data[
+                                                                              i]
+                                                                          [
                                                                           'total'],
                                                               style: TextStyle(
                                                                   fontWeight:
@@ -414,9 +412,8 @@ void messagevalidation1() {
                                                               ? Text(
                                                                   tous == false
                                                                       ? "Kiasi: " +
-                                                                          (double.parse(snap.data[i]['total']))
-                                                                              .toStringAsFixed(
-                                                                                  0)
+                                                                          (double.parse(snap.data[i]['total'])).toStringAsFixed(
+                                                                              0)
                                                                       : "Kiasi: " +
                                                                           snap.data[i]
                                                                               [
@@ -433,9 +430,8 @@ void messagevalidation1() {
                                                               : Text(
                                                                   tous == false
                                                                       ? "Yose: " +
-                                                                          (double.parse(snap.data[i]['total']))
-                                                                              .toStringAsFixed(
-                                                                                  0)
+                                                                          (double.parse(snap.data[i]['total'])).toStringAsFixed(
+                                                                              0)
                                                                       : "Yose: " +
                                                                           snap.data[i]
                                                                               [

@@ -135,7 +135,7 @@ class _MyformState extends State<Myform> with SingleTickerProviderStateMixin {
     payeoupaspaye();
     loginworker();
     etatjournal();
-    _timer = Timer.periodic(Duration(seconds:10), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 10), (timer) {
       payeoupaspaye();
       loginworker();
       etatjournal();
@@ -157,7 +157,7 @@ class _MyformState extends State<Myform> with SingleTickerProviderStateMixin {
         "nro_w": widget.numero,
         "pd": widget.password,
       });
-   var resultat = jsonDecode(response.body);
+      var resultat = jsonDecode(response.body);
       if (resultat.length == 0) {
         setState(() {
           w = "n";
@@ -173,6 +173,7 @@ class _MyformState extends State<Myform> with SingleTickerProviderStateMixin {
       });
     }
   }
+
   payeoupaspaye() async {
     var url = "https://kakwetuburundifafanini.com/paye/payeoupaspaye.php";
     try {
@@ -197,7 +198,7 @@ class _MyformState extends State<Myform> with SingleTickerProviderStateMixin {
     try {
       final response =
           await http.post(url, body: {"nro": widget.numero, "etat": "1"});
-     var resultat = jsonDecode(response.body);
+      var resultat = jsonDecode(response.body);
       setState(() {
         journal = (resultat[0]['nombre']).toString();
       });

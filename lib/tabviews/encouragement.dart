@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
-import 'package:dropdownfield/dropdownfield.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -80,12 +80,12 @@ class _EncouragementState extends State<Encouragement> {
   }
 
   int s = 0;
-firstcheckvip() async {
+  firstcheckvip() async {
     try {
       final response = await http.post(
           "https://kakwetuburundifafanini.com/first/firstcheckvip.php",
           body: {"nro": widget.numero});
-          var resultat=await compute(_isolate1,response.body);
+      var resultat = await compute(_isolate1, response.body);
       if (resultat.length == 0) {
         setState(() {
           s = 1;
@@ -95,8 +95,7 @@ firstcheckvip() async {
           s = 2;
         });
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   decrypternumero(String numb) {
@@ -127,15 +126,17 @@ firstcheckvip() async {
     }
     return result.toString();
   }
-  static _isolate1(String body){
-return jsonDecode(body);
+
+  static _isolate1(String body) {
+    return jsonDecode(body);
   }
- selectoperator() async {
+
+  selectoperator() async {
     try {
       final response = await http.post(
           "https://kakwetuburundifafanini.com/get/selectoperatordepays.php",
           body: {"pays": widget.pays});
-var resultat=await compute(_isolate1,response.body);
+      var resultat = await compute(_isolate1, response.body);
       setState(() {
         for (int i = 0; i < resultat.length; i++) {
           setState(() {
@@ -153,18 +154,17 @@ var resultat=await compute(_isolate1,response.body);
     }
   }
 
-selecttypepayementvip(String imiho) async {
+  selecttypepayementvip(String imiho) async {
     try {
       final response = await http.post(
           "https://kakwetuburundifafanini.com/get/selectoppayementvip.php",
           body: {"imihora": imiho});
-          var resultat=jsonDecode(response.body);
+      var resultat = jsonDecode(response.body);
       setState(() {
-          _streamcontroller.add(resultat);
+        _streamcontroller.add(resultat);
       });
     } catch (e) {
-      setState(() {
-      });
+      setState(() {});
     }
   }
 
@@ -173,9 +173,9 @@ selecttypepayementvip(String imiho) async {
       final response = await http.post(
           "https://kakwetuburundifafanini.com/get/selecttypepayementdeoperateu.php",
           body: {"imihora": imihora});
-  var resultat=jsonDecode(response.body);
+      var resultat = jsonDecode(response.body);
       setState(() {
-      _streamcontroller.add(resultat);
+        _streamcontroller.add(resultat);
         probleme = false;
       });
     } catch (e) {
@@ -209,13 +209,12 @@ selecttypepayementvip(String imiho) async {
     return t;
   }
 
-  addechecpayement(){
+  addechecpayement() {
     setState(() {
       visible1 = true;
     });
     try {
-      http.post(
-          "https://kakwetuburundifafanini.com/add/addechecpayement.php",
+      http.post("https://kakwetuburundifafanini.com/add/addechecpayement.php",
           body: {
             "message_echec": _actionResponse,
             "nro": widget.numero,
@@ -224,42 +223,42 @@ selecttypepayementvip(String imiho) async {
             "op": imihora,
             "pays": pay1,
             "motant": montant,
-          }).then((value){
-            if(value.statusCode==200){
- setState(() {
-        _actionResponse = "";
-        amount.text = "";
-        visible1 = false;
-        pop = true;
-        Fluttertoast.showToast(
-            msg: widget.l.fra == 1
-                ? "Réessayez Encore"
-                : widget.l.eng == 1
-                    ? "Retry Once Again"
-                    : widget.l.swa == 1
-                        ? "Jaribu tena"
-                        : "Mugerageze kandi",
-            backgroundColor: Colors.red,
-            gravity: ToastGravity.CENTER,
-            toastLength: Toast.LENGTH_LONG);
-      });
-            }else{
-setState(() {
-        visible1 = false;
-        Fluttertoast.showToast(
-            msg: widget.l.fra == 1
-                ? "Echec,Acceptez encore"
-                : widget.l.eng == 1
-                    ? "Failed,Accept Once again"
-                    : widget.l.swa == 1
-                        ? "Bimekatala,Kubari tena"
-                        : "Ntivyakunze,Emeza kandi",
-            backgroundColor: Colors.red,
-            gravity: ToastGravity.CENTER,
-            toastLength: Toast.LENGTH_LONG);
-      });
-            }
+          }).then((value) {
+        if (value.statusCode == 200) {
+          setState(() {
+            _actionResponse = "";
+            amount.text = "";
+            visible1 = false;
+            pop = true;
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Réessayez Encore"
+                    : widget.l.eng == 1
+                        ? "Retry Once Again"
+                        : widget.l.swa == 1
+                            ? "Jaribu tena"
+                            : "Mugerageze kandi",
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
           });
+        } else {
+          setState(() {
+            visible1 = false;
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Echec,Acceptez encore"
+                    : widget.l.eng == 1
+                        ? "Failed,Accept Once again"
+                        : widget.l.swa == 1
+                            ? "Bimekatala,Kubari tena"
+                            : "Ntivyakunze,Emeza kandi",
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
+          });
+        }
+      });
     } catch (e) {
       setState(() {
         visible1 = false;
@@ -278,56 +277,56 @@ setState(() {
       return;
     }
   }
-  updatecontpayetaddhowget(){
+
+  updatecontpayetaddhowget() {
     setState(() {
       visible1 = true;
     });
     try {
-      http.post(
-          "https://kakwetuburundifafanini.com/update/updatecont_pay.php",
+      http.post("https://kakwetuburundifafanini.com/update/updatecont_pay.php",
           body: {
             "nro": widget.numero,
             "dre": dure,
             "numero": widget.numero,
             "sme": montant,
             "pays": widget.pays
-          }).then((value){
-            if(value.statusCode==200){
-setState(() {
-        _actionResponse = "";
-        visible1 = false;
-        Fluttertoast.showToast(
-            msg: widget.l.fra == 1
-                ? "Bravo,Vous avez Un paquet de " + dure + " jours"
-                : widget.l.eng == 1
-                    ? "Good,You have now a packet of " + dure + " days"
-                    : widget.l.swa == 1
-                        ? "Asante,hivi Uko na Mfuko wa siku " + dure
-                        : "Murakoze,Ubu Mufise Umutekero w'imisi " + dure,
-            backgroundColor: Colors.black,
-            gravity: ToastGravity.CENTER,
-            toastLength: Toast.LENGTH_LONG);
-        pop = true;
-        Navigator.pop(context);
-        Navigator.pop(context);
-      });
-            }else{
-setState(() {
-        visible1 = false;
-        Fluttertoast.showToast(
-            msg: widget.l.fra == 1
-                ? "Echec,Acceptez encore"
-                : widget.l.eng == 1
-                    ? "Failed,Accept Once again"
-                    : widget.l.swa == 1
-                        ? "Bimekatala,Kubari tena"
-                        : "Ntivyakunze,Emeza kandi",
-            backgroundColor: Colors.red,
-            gravity: ToastGravity.CENTER,
-            toastLength: Toast.LENGTH_LONG);
-      });
-            }
+          }).then((value) {
+        if (value.statusCode == 200) {
+          setState(() {
+            _actionResponse = "";
+            visible1 = false;
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Bravo,Vous avez Un paquet de " + dure + " jours"
+                    : widget.l.eng == 1
+                        ? "Good,You have now a packet of " + dure + " days"
+                        : widget.l.swa == 1
+                            ? "Asante,hivi Uko na Mfuko wa siku " + dure
+                            : "Murakoze,Ubu Mufise Umutekero w'imisi " + dure,
+                backgroundColor: Colors.black,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
+            pop = true;
+            Navigator.pop(context);
+            Navigator.pop(context);
           });
+        } else {
+          setState(() {
+            visible1 = false;
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Echec,Acceptez encore"
+                    : widget.l.eng == 1
+                        ? "Failed,Accept Once again"
+                        : widget.l.swa == 1
+                            ? "Bimekatala,Kubari tena"
+                            : "Ntivyakunze,Emeza kandi",
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
+          });
+        }
+      });
     } catch (e) {
       setState(() {
         visible1 = false;
@@ -347,15 +346,14 @@ setState(() {
     }
   }
 
-  Future<dynamic> ecobank(var phoneNumber, amount) async {
+  Future<dynamic> nk(var phoneNumber, amount) async {
     var sendMap = <String, dynamic>{
       'numero': phoneNumber,
       'montant': amount,
     };
-// response waits for result from java code
     String response = "";
     try {
-      final String result = await _hover.invokeMethod('ecobank', sendMap);
+      final String result = await _hover.invokeMethod('nk', sendMap);
       setState(() {
         response = result;
       });
@@ -367,15 +365,14 @@ setState(() {
     });
   }
 
-  Future<dynamic> bbci(var phoneNumber, amount) async {
+  Future<dynamic> ci(var phoneNumber, amount) async {
     var sendMap = <String, dynamic>{
       'numero': phoneNumber,
       'montant': amount,
     };
-// response waits for result from java code
     String response = "";
     try {
-      final String result = await _hover.invokeMethod('bbci', sendMap);
+      final String result = await _hover.invokeMethod('ci', sendMap);
       setState(() {
         response = result;
       });
@@ -387,15 +384,14 @@ setState(() {
     });
   }
 
-  Future<dynamic> bancobu(var phoneNumber, amount) async {
+  Future<dynamic> bu(var phoneNumber, amount) async {
     var sendMap = <String, dynamic>{
       'numero': phoneNumber,
       'montant': amount,
     };
-// response waits for result from java code
     String response = "";
     try {
-      final String result = await _hover.invokeMethod('bancobu', sendMap);
+      final String result = await _hover.invokeMethod('bu', sendMap);
       setState(() {
         response = result;
       });
@@ -407,15 +403,14 @@ setState(() {
     });
   }
 
-  Future<dynamic> ecocash(var phoneNumber, amount) async {
+  Future<dynamic> ec(var phoneNumber, amount) async {
     var sendMap = <String, dynamic>{
       'numero': phoneNumber,
       'montant': amount,
     };
-// response waits for result from java code
     String response = "";
     try {
-      final String result = await _hover.invokeMethod('ecocash', sendMap);
+      final String result = await _hover.invokeMethod('ec', sendMap);
       setState(() {
         response = result;
       });
@@ -427,16 +422,15 @@ setState(() {
     });
   }
 
-  Future<dynamic> lumicash(var phoneNumber, amount, aide) async {
+  Future<dynamic> mi(var phoneNumber, amount, aide) async {
     var sendMap = <String, dynamic>{
       'numero': phoneNumber,
       'montant': amount,
-      'object': aide,
+      'objet': aide,
     };
-// response waits for result from java code
     String response = "";
     try {
-      final String result = await _hover.invokeMethod('lumicash', sendMap);
+      final String result = await _hover.invokeMethod('mi', sendMap);
       setState(() {
         response = result;
       });
@@ -449,6 +443,17 @@ setState(() {
   }
 
   int test = 0;
+  update() {
+    String pa = "com.nini.fafa";
+    try {
+      launch("market://details?id=" + pa);
+    } on PlatformException catch (e) {
+      launch("https://play.google.com/store/apps/details?id=" + pa);
+    } finally {
+      launch("https://play.google.com/store/apps/details?id=" + pa);
+    }
+  }
+
   snackabarfauxoperateur() {
     final snackBar = SnackBar(
       content: Row(
@@ -679,8 +684,8 @@ setState(() {
                             return null;
                           } else if (snap.hasData) {
                             return Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20,bottom: 8.0),
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, bottom: 8.0),
                               child: Card(
                                 color: Colors.amber,
                                 elevation: 0,
@@ -690,9 +695,27 @@ setState(() {
                                     borderRadius: BorderRadius.circular(15)),
                                 child: Visibility(
                                   visible: _actionResponse != "" ? false : true,
-                                  child: DropDownField(
-                                    itemsVisibleInDropdown: 3,
-                                    onValueChanged: (v) {
+                                  child: DropdownButtonFormField(
+                                    autofocus: false,
+                                    autovalidate: false,
+                                    isDense: true,
+                                    isExpanded: true,
+                                    dropdownColor: Colors.black,
+                                    items: snap.data.map((e) {
+                                      return DropdownMenuItem(
+                                        child: Center(
+                                          child: new Text(
+                                            e,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        value: e,
+                                      );
+                                    }).toList(),
+                                    onChanged: (v) {
                                       setState(() {
                                         if (s == 1) {
                                           selecttypepayementdeoperateurs(v);
@@ -704,23 +727,21 @@ setState(() {
                                         _actionResponse = "";
                                       });
                                     },
-                                    controller: dropoperateurs,
-                                    textStyle: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                    labelText: widget.l.fra == 1
-                                        ? "Réseau"
-                                        : widget.l.eng == 1
-                                            ? "Network"
-                                            : widget.l.swa == 1
-                                                ? "Mtandao"
-                                                : "Umuhora",
-                                    labelStyle: TextStyle(
-                                        color: Colors.blue,
-                                        fontSize: 20,
-                                        fontStyle: FontStyle.italic),
-                                    strict: false,
-                                    items: operateurs,
+                                    hint: Center(
+                                      child: Text(
+                                        widget.l.fra == 1
+                                            ? "Réseau"
+                                            : widget.l.eng == 1
+                                                ? "Network"
+                                                : widget.l.swa == 1
+                                                    ? "Mtandao"
+                                                    : "Umuhora",
+                                        style: TextStyle(
+                                            fontStyle: FontStyle.italic,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -746,7 +767,7 @@ setState(() {
                             controller: _scrollcontroller,
                             physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
-                            itemCount:snap.data.length,
+                            itemCount: snap.data.length,
                             itemBuilder: (context, i) {
                               return Padding(
                                 padding: const EdgeInsets.all(2.0),
@@ -757,12 +778,14 @@ setState(() {
                                     onTap: () {
                                       setState(() {
                                         widget.l.fra == 1
-                                            ? amount.text = snap.data[i]['mtt'] +
+                                            ? amount.text = snap.data[i]
+                                                    ['mtt'] +
                                                 " de " +
                                                 snap.data[i]['dre'] +
                                                 " Jours"
                                             : widget.l.eng == 1
-                                                ? amount.text = snap.data[i]['mtt'] +
+                                                ? amount.text = snap.data[i]
+                                                        ['mtt'] +
                                                     " of " +
                                                     snap.data[i]['dre'] +
                                                     " Days"
@@ -775,12 +798,12 @@ setState(() {
                                                             ['mtt'] +
                                                         " Mumisi " +
                                                         snap.data[i]['dre'];
-                                        messagepay1 =
-                                            decrypterchaine(snap.data[i]['sms_pmt']);
+                                        messagepay1 = decrypterchaine(
+                                            snap.data[i]['sms_pmt']);
                                         messagepay2 = decrypterchaine(
                                             snap.data[i]['sms_pmt2']);
-                                        phone =
-                                            decrypterchaine(snap.data[i]['mamaf_p']);
+                                        phone = decrypterchaine(
+                                            snap.data[i]['mamaf_p']);
                                         montant = snap.data[i]['mtt'];
                                         dure = snap.data[i]['dre'];
                                         modepayement = snap.data[i]['nom'];
@@ -799,12 +822,14 @@ setState(() {
                                             borderRadius:
                                                 BorderRadius.circular(5)),
                                         child: Column(
-                                           mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Padding(
                                               padding:
                                                   const EdgeInsets.all(2.0),
-                                              child: Text(snap.data[i]['nom'] + ":",
+                                              child: Text(
+                                                  snap.data[i]['nom'] + ":",
                                                   style: TextStyle(
                                                       fontSize: 30,
                                                       fontWeight:
@@ -847,15 +872,13 @@ setState(() {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
-                                                                  color: Colors
-                                                                      .white)),
+                                                                  color: Colors.white)),
                                             ),
                                             Padding(
                                               padding:
                                                   const EdgeInsets.all(2.0),
                                               child: widget.l.fra == 1
-                                                  ? Text(
-                                                      snap.data[i]['dre'] + " Jours",
+                                                  ? Text(snap.data[i]['dre'] + " Jours",
                                                       style: TextStyle(
                                                           fontSize: 20,
                                                           fontWeight:
@@ -865,9 +888,8 @@ setState(() {
                                                       ? Text(snap.data[i]['dre'] + " Days",
                                                           style: TextStyle(
                                                               fontSize: 20,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                                              fontWeight: FontWeight
+                                                                  .bold,
                                                               color:
                                                                   Colors.white))
                                                       : widget.l.swa == 1
@@ -914,7 +936,7 @@ setState(() {
                     ListView(scrollDirection: Axis.vertical, children: <Widget>[
                   Container(
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 20 ,right: 20),
+                      padding: const EdgeInsets.only(left: 20, right: 20),
                       child: Card(
                         elevation: 0,
                         color: Colors.green,
@@ -981,25 +1003,26 @@ setState(() {
                                               .contains(messagepay2)) {
                                         updatecontpayetaddhowget();
                                       } else if (_actionResponse == "") {
-                                        if (dropoperateurs.text.isEmpty) {
+                                        if (imihora == "") {
                                           snackabarfauxoperateur();
                                         } else if (amount.text.isEmpty) {
                                           snackabarfauxpaquet();
                                         } else {
                                           if (modepayement == "lumicash") {
-                                            lumicash(phone, montant,
-                                                "Encouragement");
+                                            mi(phone, montant, "Encouragement");
                                           } else if (modepayement ==
                                               "ecocash") {
-                                            ecocash(phone, montant);
+                                            ec(phone, montant);
                                           } else if (modepayement == "mcash") {
-                                            bancobu(phone, montant);
+                                            bu(phone, montant);
                                           } else if (modepayement ==
                                               "fonecash") {
-                                            bbci(phone, montant);
+                                            ci(phone, montant);
                                           } else if (modepayement ==
                                               "ecobankpay") {
-                                            ecobank(phone, montant);
+                                            nk(phone, montant);
+                                          } else {
+                                            update();
                                           }
                                         }
                                       } else {

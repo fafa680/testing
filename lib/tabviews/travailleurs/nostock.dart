@@ -8,14 +8,23 @@ import 'package:kakwetu/page3.dart';
 import 'package:kakwetu/servicepayement.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+
 class Nostock extends StatefulWidget {
   final Langue l;
   final String numero;
-   final int isboss;
+  final int isboss;
   final int duree;
   final String worker;
   final int controled;
-  Nostock({Key key, this.l, this.numero, this.duree,this.isboss,this.worker,this.controled}) : super(key: key);
+  Nostock(
+      {Key key,
+      this.l,
+      this.numero,
+      this.duree,
+      this.isboss,
+      this.worker,
+      this.controled})
+      : super(key: key);
 
   @override
   _NostockState createState() => _NostockState();
@@ -26,7 +35,7 @@ class _NostockState extends State<Nostock> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-         backgroundColor: Colors.black,
+          backgroundColor: Colors.black,
           title: Text(
             "Kakwetu",
             style: TextStyle(
@@ -103,11 +112,19 @@ class _NostockState extends State<Nostock> {
 class Myform extends StatefulWidget {
   final Langue l;
   final String numero;
-    final int isboss;
+  final int isboss;
   final int duree;
   final String worker;
   final int controled;
-  Myform({Key key, this.l, this.numero, this.duree,this.isboss,this.worker,this.controled}) : super(key: key);
+  Myform(
+      {Key key,
+      this.l,
+      this.numero,
+      this.duree,
+      this.isboss,
+      this.worker,
+      this.controled})
+      : super(key: key);
 
   @override
   _MyformState createState() => _MyformState();
@@ -117,23 +134,25 @@ class _MyformState extends State<Myform> {
   var argent = [];
   Timer _timer;
   bool delet = false;
- TextEditingController qte = new TextEditingController();
-    StreamController<List> _streamcontroller1=StreamController<List>();
-    ScrollController _scrollcontroller=new ScrollController();
-     FocusNode focusnode;
-    @override
+  TextEditingController qte = new TextEditingController();
+  StreamController<List> _streamcontroller1 = StreamController<List>();
+  ScrollController _scrollcontroller = new ScrollController();
+  FocusNode focusnode;
+  @override
   void initState() {
-    focusnode=FocusNode();
-    focusnode.addListener(() { });
+    focusnode = FocusNode();
+    focusnode.addListener(() {});
     selectnostock();
-    _timer = Timer.periodic(const Duration(seconds:5), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       selectnostock();
     });
     super.initState();
   }
-    dismisskeyboard(){
-  focusnode.unfocus();
-}
+
+  dismisskeyboard() {
+    focusnode.unfocus();
+  }
+
   @override
   void dispose() {
     focusnode.dispose();
@@ -143,20 +162,22 @@ class _MyformState extends State<Myform> {
     if (_timer.isActive) _timer.cancel();
     super.dispose();
   }
-   final _formKey = GlobalKey<FormState>();
-    static _isolate(String body){
-return jsonDecode(body);
+
+  final _formKey = GlobalKey<FormState>();
+  static _isolate(String body) {
+    return jsonDecode(body);
   }
-    selectnostock() async {
+
+  selectnostock() async {
     try {
       final response = await http
           .post("https://kakwetuburundifafanini.com/nstok/gnstok.php", body: {
         "nro": widget.numero,
       });
-       var resultat=await compute(_isolate,response.body);
-     setState(() {
-                _streamcontroller1.add(resultat);
-        argent =resultat;
+      var resultat = await compute(_isolate, response.body);
+      setState(() {
+        _streamcontroller1.add(resultat);
+        argent = resultat;
       });
     } catch (e) {
       setState(() {
@@ -164,47 +185,48 @@ return jsonDecode(body);
       });
     }
   }
-firstchecknostock(){
+
+  firstchecknostock() {
     setState(() {
       visible1 = true;
       ispop = false;
     });
     try {
-      if ((double.parse(qte.text) > 0)){
-        http
-            .post("https://kakwetuburundifafanini.com/nstok/fchenostok.php", body: {
-          "nro": widget.numero,
-          "px": qte.text.replaceAll(' ', '').trim(),
-          "etat":"0",
-        }).then((value){
-          if(value.statusCode==200){
-             Fluttertoast.showToast(
-              msg: widget.l.fra == 1
-                  ? "Bien Fait"
-                  : widget.l.eng == 1
-                      ? "Done"
-                      : widget.l.swa == 1
-                          ? "Umeweza"
-                          : "Vyakunze",
-              backgroundColor: Colors.black,
-              gravity: ToastGravity.CENTER,
-              toastLength: Toast.LENGTH_LONG);
-              selectnostock();
-          }else{
+      if ((double.parse(qte.text) > 0)) {
+        http.post("https://kakwetuburundifafanini.com/nstok/fchenostok.php",
+            body: {
+              "nro": widget.numero,
+              "px": qte.text.replaceAll(' ', '').trim(),
+              "etat": "0",
+            }).then((value) {
+          if (value.statusCode == 200) {
             Fluttertoast.showToast(
-              msg: widget.l.fra == 1
-                  ? "Operation Echouée"
-                  : widget.l.eng == 1
-                      ? "Failed"
-                      : widget.l.swa == 1
-                          ? "Bimekatala"
-                          : "Ntivyakunze",
-              backgroundColor: Colors.red,
-              gravity: ToastGravity.CENTER,
-              toastLength: Toast.LENGTH_LONG);
+                msg: widget.l.fra == 1
+                    ? "Bien Fait"
+                    : widget.l.eng == 1
+                        ? "Done"
+                        : widget.l.swa == 1
+                            ? "Umeweza"
+                            : "Vyakunze",
+                backgroundColor: Colors.black,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
+            selectnostock();
+          } else {
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Operation Echouée"
+                    : widget.l.eng == 1
+                        ? "Failed"
+                        : widget.l.swa == 1
+                            ? "Bimekatala"
+                            : "Ntivyakunze",
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
           }
         });
-         setState(() {
+        setState(() {
           visible1 = false;
           ispop = true;
           qte.text = "";
@@ -223,7 +245,7 @@ firstchecknostock(){
               backgroundColor: Colors.red,
               gravity: ToastGravity.CENTER,
               toastLength: Toast.LENGTH_LONG);
-              dismisskeyboard();
+          dismisskeyboard();
           visible1 = false;
           ispop = true;
         });
@@ -241,25 +263,24 @@ firstchecknostock(){
             backgroundColor: Colors.red,
             gravity: ToastGravity.CENTER,
             toastLength: Toast.LENGTH_LONG);
-            dismisskeyboard();
+        dismisskeyboard();
         visible1 = false;
         ispop = true;
       });
       return;
     }
   }
-deleteventeargant(String date){
+
+  deleteventeargant(String date) {
     setState(() {
       delet = false;
     });
     try {
-      http.post(
-          "https://kakwetuburundifafanini.com/nstok/denostok.php",
-          body: {
-            "dat": date,
-            "nro": widget.numero,
-            "etat":"1",
-          });
+      http.post("https://kakwetuburundifafanini.com/nstok/denostok.php", body: {
+        "dat": date,
+        "nro": widget.numero,
+        "etat": "1",
+      });
       setState(() {
         ispop = true;
       });
@@ -269,16 +290,16 @@ deleteventeargant(String date){
       });
     }
   }
- updateagtetatvue(String date){
+
+  updateagtetatvue(String date) {
     setState(() {
       ispop = false;
     });
     try {
-     http.post(
-          "https://kakwetuburundifafanini.com/nstok/vuenostok.php",
+      http.post("https://kakwetuburundifafanini.com/nstok/vuenostok.php",
           body: {
             "dat": date,
-            "etat":"1",
+            "etat": "1",
             "nro": widget.numero,
           });
       setState(() {
@@ -290,8 +311,8 @@ deleteventeargant(String date){
       });
     }
   }
-  
-  void messagevalidersuppression(String somme, String date,int i) {
+
+  void messagevalidersuppression(String somme, String date, int i) {
     AlertDialog alerte = new AlertDialog(
       backgroundColor: Colors.black,
       content: widget.l.fra == 1
@@ -429,6 +450,7 @@ deleteventeargant(String date){
         });
     //return;
   }
+
   void confimationvue(String somme, String date) {
     AlertDialog alerte = new AlertDialog(
       backgroundColor: Colors.black,
@@ -567,7 +589,8 @@ deleteventeargant(String date){
         });
     //return;
   }
-paspayemessage() {
+
+  paspayemessage() {
     AlertDialog alerte = new AlertDialog(
       backgroundColor: Colors.black,
       content: widget.l.fra == 1
@@ -576,8 +599,7 @@ paspayemessage() {
                   fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
               textAlign: TextAlign.center)
           : widget.l.eng == 1
-              ? Text(
-                  "Your Packet has Finished Do you want to pay once again ?",
+              ? Text("Your Packet has Finished Do you want to pay once again ?",
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -600,7 +622,7 @@ paspayemessage() {
                     ),
       actions: <Widget>[
         MaterialButton(
-          splashColor:Colors.white,
+          splashColor: Colors.white,
           onPressed: () {
             Navigator.pop(context);
           },
@@ -633,7 +655,7 @@ paspayemessage() {
                           textAlign: TextAlign.center),
         ),
         MaterialButton(
-          splashColor:Colors.white,
+          splashColor: Colors.white,
           onPressed: () {
             Navigator.pop(context);
             Navigator.pop(context);
@@ -682,6 +704,7 @@ paspayemessage() {
         });
     //return;
   }
+
   paspayemessageechec() {
     AlertDialog alerte = new AlertDialog(
       backgroundColor: Colors.black,
@@ -691,8 +714,7 @@ paspayemessage() {
                   fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
               textAlign: TextAlign.center)
           : widget.l.eng == 1
-              ? Text(
-                  "Sorry We have a problem,Retry Later",
+              ? Text("Sorry We have a problem,Retry Later",
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -714,9 +736,8 @@ paspayemessage() {
                       textAlign: TextAlign.center,
                     ),
       actions: <Widget>[
-       
         MaterialButton(
-          splashColor:Colors.white,
+          splashColor: Colors.white,
           onPressed: () {
             Navigator.pop(context);
           },
@@ -757,29 +778,26 @@ paspayemessage() {
         });
     //return;
   }
-    void messagevalidation() {
+
+  void messagevalidation() {
     AlertDialog alerte = new AlertDialog(
       backgroundColor: Colors.black,
       content: widget.l.fra == 1
-          ? Text("C'est " + qte.text+" ?",
+          ? Text("C'est " + qte.text + " ?",
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.white),
               textAlign: TextAlign.center)
           : widget.l.eng == 1
-              ? Text(
-                  "It is " +
-                      qte.text +
-                      " ?",
+              ? Text("It is " + qte.text + " ?",
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                   textAlign: TextAlign.center)
               : widget.l.swa == 1
-                  ? Text(
-                      "Ni " + qte.text + " ?",
+                  ? Text("Ni " + qte.text + " ?",
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -835,47 +853,47 @@ paspayemessage() {
             try {
               if (double.parse(qte.text.trim()) > 0) {
                 Navigator.pop(context);
-                  if (widget.isboss == 0) {
-                    if (widget.worker == "y") {
-                     firstchecknostock();
-                    } else if (widget.worker == "n") {
-                      setState(() {
-                        Fluttertoast.showToast(
-                            msg: widget.l.fra == 1
-                                ? "Desolé,Vous n'avez pas L'autorisation d'enregistrer,Contacter Votre Boss"
-                                : widget.l.eng == 1
-                                    ? "Sorry,You don't have a permission of registering,please Contact your Boss"
-                                    : widget.l.swa == 1
-                                        ? "Samahani,Umenyanganywa Ruhusa Rwakuingiza Bidhaa,Wasiriana kwanza na Boss wako"
-                                        : "Muradutunga,Mwatswe Uburenganzira,Nimubaze Boss Wanyu",
-                            backgroundColor: Colors.red,
-                            gravity: ToastGravity.CENTER,
-                            toastLength: Toast.LENGTH_LONG);
-                        visible1 = false;
-                        ispop = true;
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      });
-                    } else {
-                      setState(() {
-                        Fluttertoast.showToast(
-                            msg: widget.l.fra == 1
-                                ? "Reessayez encore"
-                                : widget.l.eng == 1
-                                    ? "Retry"
-                                    : widget.l.swa == 1
-                                        ? "Bonyeza tena"
-                                        : "Subira Wemeze",
-                            backgroundColor: Colors.red,
-                            gravity: ToastGravity.CENTER,
-                            toastLength: Toast.LENGTH_LONG);
-                        visible1 = false;
-                        ispop = true;
-                      });
-                    }
+                if (widget.isboss == 0) {
+                  if (widget.worker == "y") {
+                    firstchecknostock();
+                  } else if (widget.worker == "n") {
+                    setState(() {
+                      Fluttertoast.showToast(
+                          msg: widget.l.fra == 1
+                              ? "Desolé,Vous n'avez pas L'autorisation d'enregistrer,Contacter Votre Boss"
+                              : widget.l.eng == 1
+                                  ? "Sorry,You don't have a permission of registering,please Contact your Boss"
+                                  : widget.l.swa == 1
+                                      ? "Samahani,Umenyanganywa Ruhusa Rwakuingiza Bidhaa,Wasiriana kwanza na Boss wako"
+                                      : "Muradutunga,Mwatswe Uburenganzira,Nimubaze Boss Wanyu",
+                          backgroundColor: Colors.red,
+                          gravity: ToastGravity.CENTER,
+                          toastLength: Toast.LENGTH_LONG);
+                      visible1 = false;
+                      ispop = true;
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    });
                   } else {
-firstchecknostock();
+                    setState(() {
+                      Fluttertoast.showToast(
+                          msg: widget.l.fra == 1
+                              ? "Reessayez encore"
+                              : widget.l.eng == 1
+                                  ? "Retry"
+                                  : widget.l.swa == 1
+                                      ? "Bonyeza tena"
+                                      : "Subira Wemeze",
+                          backgroundColor: Colors.red,
+                          gravity: ToastGravity.CENTER,
+                          toastLength: Toast.LENGTH_LONG);
+                      visible1 = false;
+                      ispop = true;
+                    });
                   }
+                } else {
+                  firstchecknostock();
+                }
               } else {
                 Fluttertoast.showToast(
                     msg: widget.l.fra == 1
@@ -940,8 +958,9 @@ firstchecknostock();
         });
     //return;
   }
+
   bool visible1 = false;
-    bool _isontop = true;
+  bool _isontop = true;
   _scrolltop() {
     _scrollcontroller.animateTo(_scrollcontroller.position.minScrollExtent,
         duration: Duration(milliseconds: 1000), curve: Curves.easeIn);
@@ -952,7 +971,7 @@ firstchecknostock();
 
   _scrolldown() {
     _scrollcontroller.animateTo(_scrollcontroller.position.maxScrollExtent,
-        duration: Duration(seconds: argent.isEmpty ? 1 :(argent.length*2)),
+        duration: Duration(seconds: argent.isEmpty ? 1 : (argent.length * 2)),
         curve: Curves.easeOut);
     setState(() {
       _isontop = false;
@@ -993,9 +1012,6 @@ firstchecknostock();
       actions: <Widget>[
         MaterialButton(
           onPressed: () {
-            setState(() {
-              ispop = true;
-            });
             Navigator.pop(context);
           },
           child: widget.l.fra == 1
@@ -1028,9 +1044,6 @@ firstchecknostock();
         ),
         MaterialButton(
           onPressed: () {
-            setState(() {
-              ispop = true;
-            });
             Navigator.pop(context);
             Navigator.pop(context);
           },
@@ -1071,19 +1084,23 @@ firstchecknostock();
         });
     //return;
   }
-bool ispop=true;
+
+  bool ispop = true;
   Future<bool> _willpop() async {
     return Future.value(ispop);
   }
-bool tous=false;
+
+  bool tous = false;
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
         if (ispop) {
           messagevalidation1();
+        } else {
+          return _willpop();
         }
-        return _willpop();
+        return null;
       },
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1104,10 +1121,10 @@ bool tous=false;
                             child: ListView.builder(
                                 controller: _scrollcontroller,
                                 physics: BouncingScrollPhysics(),
-                                itemCount:snap.data.length,
+                                itemCount: snap.data.length,
                                 itemBuilder: (context, i) {
                                   return InkWell(
-                                    splashColor:Colors.white,
+                                    splashColor: Colors.white,
                                     onLongPress: () {
                                       if (widget.isboss == 1) {
                                         setState(() {
@@ -1226,8 +1243,8 @@ bool tous=false;
                                               children: [
                                                 Text(
                                                   tous == false
-                                                      ? (double.parse(
-                                                              snap.data[i]['sm']))
+                                                      ? (double.parse(snap
+                                                              .data[i]['sm']))
                                                           .toStringAsFixed(0)
                                                       : snap.data[i]['sm'],
                                                   style: TextStyle(
@@ -1237,121 +1254,150 @@ bool tous=false;
                                                       fontSize: 30),
                                                 ),
                                                 Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
                                                     Padding(
-                                            padding: const EdgeInsets.only(left: 3),
-                                            child: Visibility(
-                                              visible: snap.data[i]['etat'] == '1'
-                                                  ? widget.isboss == 1
-                                                      ? true
-                                                      : delet
-                                                  : delet,
-                                              child: IconButton(
-                                                splashColor:Colors.white,
-                                                  icon: Icon(
-                                                    Icons.delete,
-                                                    size: 30,
-                                                    color: Colors.white,
-                                                  ),
-                                                  onPressed: () {
-                                                    try {
-                                                      if (widget.controled == 0) {
-                                                      if(snap.data[i]['etat']=="1"){
-                                                         deleteventeargant(snap.data[i]['dat']);
-                                                        }else{
-                                                          Fluttertoast.showToast(
-                                                            msg: widget.l.fra == 1
-                                                                ? "Touchez d'abord sur ce symbole Rouge"
-                                                                : widget.l.eng ==
-                                                                        1
-                                                                    ? "Touch First on the red symbol"
-                                                                    : widget.l.swa ==
-                                                                            1
-                                                                        ? "Gusa kwanza kwenye hiyo harama nyekundu"
-                                                                        : "Banza ufyonde ako kamenyetso gatukura",
-                                                            backgroundColor:
-                                                                Colors.red,
-                                                            gravity: ToastGravity
-                                                                .CENTER,
-                                                            toastLength: Toast
-                                                                .LENGTH_LONG);
-                                                        }
-                                                      } else if ((int.parse(
-                                                                  snap.data[i]
-                                                                      ['etat']) >
-                                                              0) &&
-                                                          (widget.controled ==
-                                                              1)) {
-                                                        messagevalidersuppression(
-                                                            snap.data[i]['sm'],
-                                                            snap.data[i]['dat'],i);
-                                                      } else {
-                                                        Fluttertoast.showToast(
-                                                            msg: widget.l.fra == 1
-                                                                ? "Confirmez d'abord votre travailleur que vous avez vue cette somme en appuyant sur le symbole rouge"
-                                                                : widget.l.eng ==
-                                                                        1
-                                                                    ? "conform first your worker that you have seen this money by pression that red symbol"
-                                                                    : widget.l.swa ==
-                                                                            1
-                                                                        ? "Thibitisha kwanza mufanyakazi wako kama umeona pesa hizi kwakubonyeza iyo harama nyekundu"
-                                                                        : "Boss Banza Mwemezeko Mwatoye ayo mahera Mukwemeza Komwatoye aya mahera Fyonda ako kamenyetso gatukura",
-                                                            backgroundColor:
-                                                                Colors.red,
-                                                            gravity: ToastGravity
-                                                                .CENTER,
-                                                            toastLength: Toast
-                                                                .LENGTH_LONG);
-                                                      }
-                                                    } catch (e) {
-                                                      return;
-                                                    }
-                                                  }),
-                                            ),
-                                          ),
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 3),
+                                                      child: Visibility(
+                                                        visible: snap.data[i]
+                                                                    ['etat'] ==
+                                                                '1'
+                                                            ? widget.isboss == 1
+                                                                ? true
+                                                                : delet
+                                                            : delet,
+                                                        child: IconButton(
+                                                            splashColor:
+                                                                Colors.white,
+                                                            icon: Icon(
+                                                              Icons.delete,
+                                                              size: 30,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            onPressed: () {
+                                                              try {
+                                                                if (widget
+                                                                        .controled ==
+                                                                    0) {
+                                                                  if (snap.data[
+                                                                              i]
+                                                                          [
+                                                                          'etat'] ==
+                                                                      "1") {
+                                                                    deleteventeargant(
+                                                                        snap.data[i]
+                                                                            [
+                                                                            'dat']);
+                                                                  } else {
+                                                                    Fluttertoast.showToast(
+                                                                        msg: widget.l.fra == 1
+                                                                            ? "Touchez d'abord sur ce symbole Rouge"
+                                                                            : widget.l.eng == 1
+                                                                                ? "Touch First on the red symbol"
+                                                                                : widget.l.swa == 1
+                                                                                    ? "Gusa kwanza kwenye hiyo harama nyekundu"
+                                                                                    : "Banza ufyonde ako kamenyetso gatukura",
+                                                                        backgroundColor: Colors.red,
+                                                                        gravity: ToastGravity.CENTER,
+                                                                        toastLength: Toast.LENGTH_LONG);
+                                                                  }
+                                                                } else if ((int.parse(snap.data[i]
+                                                                            [
+                                                                            'etat']) >
+                                                                        0) &&
+                                                                    (widget.controled ==
+                                                                        1)) {
+                                                                  messagevalidersuppression(
+                                                                      snap.data[
+                                                                              i]
+                                                                          [
+                                                                          'sm'],
+                                                                      snap.data[
+                                                                              i]
+                                                                          [
+                                                                          'dat'],
+                                                                      i);
+                                                                } else {
+                                                                  Fluttertoast.showToast(
+                                                                      msg: widget.l.fra == 1
+                                                                          ? "Confirmez d'abord votre travailleur que vous avez vue cette somme en appuyant sur le symbole rouge"
+                                                                          : widget.l.eng == 1
+                                                                              ? "conform first your worker that you have seen this money by pression that red symbol"
+                                                                              : widget.l.swa == 1
+                                                                                  ? "Thibitisha kwanza mufanyakazi wako kama umeona pesa hizi kwakubonyeza iyo harama nyekundu"
+                                                                                  : "Boss Banza Mwemezeko Mwatoye ayo mahera Mukwemeza Komwatoye aya mahera Fyonda ako kamenyetso gatukura",
+                                                                      backgroundColor: Colors.red,
+                                                                      gravity: ToastGravity.CENTER,
+                                                                      toastLength: Toast.LENGTH_LONG);
+                                                                }
+                                                              } catch (e) {
+                                                                return;
+                                                              }
+                                                            }),
+                                                      ),
+                                                    ),
                                                     Padding(
-                                                      padding: const EdgeInsets.only(right: 3.0),
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 3.0),
                                                       child: IconButton(
-                                                        splashColor:Colors.white,
-                                                          icon: snap.data[i]['etat'] ==
+                                                          splashColor:
+                                                              Colors.white,
+                                                          icon: snap.data[i][
+                                                                      'etat'] ==
                                                                   '1'
                                                               ? Icon(
-                                                                  Icons.done_all,
-                                                                  color:
-                                                                      Colors.green,
+                                                                  Icons
+                                                                      .done_all,
+                                                                  color: Colors
+                                                                      .green,
                                                                   size: 40,
                                                                 )
                                                               : Icon(Icons.done,
-                                                                  color: Colors.red,
+                                                                  color: Colors
+                                                                      .red,
                                                                   size: 50),
                                                           onPressed: () {
                                                             if ((widget.isboss ==
                                                                     1) &&
                                                                 (widget.controled ==
                                                                     0)) {
-                                                              if(snap.data[i]['etat'] =='0'){
-                                                    updateagtetatvue(snap.data[i]['dat']);
-                                                                  }
+                                                              if (snap.data[i][
+                                                                      'etat'] ==
+                                                                  '0') {
+                                                                updateagtetatvue(
+                                                                    snap.data[i]
+                                                                        [
+                                                                        'dat']);
+                                                              }
                                                             } else if (widget
                                                                     .controled ==
                                                                 1) {
-                                                                  if(snap.data[i]['etat'] =='0'){
-                                                                   confimationvue(
-                                                                  snap.data[i]['sm'],
-                                                                  snap.data[i]['dat']);
-                                                                  }} else {
+                                                              if (snap.data[i][
+                                                                      'etat'] ==
+                                                                  '0') {
+                                                                confimationvue(
+                                                                    snap.data[i]
+                                                                        ['sm'],
+                                                                    snap.data[i]
+                                                                        [
+                                                                        'dat']);
+                                                              }
+                                                            } else {
                                                               return;
                                                             }
                                                           }),
                                                     ),
-                                                        
                                                   ],
                                                 ),
                                               ],
                                             ),
                                           ),
-                                          
                                         ],
                                       ),
                                     ),
@@ -1401,13 +1447,14 @@ bool tous=false;
                                 child: Padding(
                                   padding: const EdgeInsets.all(2),
                                   child: TextFormField(
-                                     focusNode: focusnode,
+                                    focusNode: focusnode,
                                     controller: qte,
                                     keyboardType:
                                         TextInputType.numberWithOptions(),
-                                        inputFormatters: [
-                                    new FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
-                                  ],
+                                    inputFormatters: [
+                                      new FilteringTextInputFormatter.allow(
+                                          RegExp("[0-9.]"))
+                                    ],
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.center,

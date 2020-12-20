@@ -110,16 +110,17 @@ class Myform extends StatefulWidget {
 class _MyformState extends State<Myform> {
   String numero = "";
   Timer _timer;
-    StreamController<List> _streamcontroller=StreamController<List>();
-    ScrollController _scrollcontroller=new ScrollController();
-    @override
+  StreamController<List> _streamcontroller = StreamController<List>();
+  ScrollController _scrollcontroller = new ScrollController();
+  @override
   void initState() {
     selectworkers();
-    _timer = Timer.periodic(Duration(seconds:5), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
       selectworkers();
     });
     super.initState();
   }
+
   @override
   void dispose() {
     _scrollcontroller.dispose();
@@ -127,21 +128,23 @@ class _MyformState extends State<Myform> {
     if (_timer.isActive) _timer.cancel();
     super.dispose();
   }
- static _isolate(String body){
-return jsonDecode(body);
+
+  static _isolate(String body) {
+    return jsonDecode(body);
   }
+
   selectworkers() async {
     try {
       final response = await http.post(
           "https://kakwetuburundifafanini.com/gw/selectworkers.php",
           body: {"nro": widget.numero});
-          var resultat=await compute(_isolate,response.body);
-     setState(() {
+      var resultat = await compute(_isolate, response.body);
+      setState(() {
         _streamcontroller.add(resultat);
-        });
-    } catch (e) {
-    }
+      });
+    } catch (e) {}
   }
+
   void deleteData(String name) {
     AlertDialog alerte = new AlertDialog(
       title: widget.l.fra == 1
@@ -208,7 +211,7 @@ return jsonDecode(body);
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: MaterialButton(
-            splashColor:Colors.white,
+            splashColor: Colors.white,
             onPressed: () {
               Navigator.push(
                   context,
@@ -221,61 +224,81 @@ return jsonDecode(body);
                           )));
             },
             child: widget.l.fra == 1
-                ? Text("Voir Cequ'il fait",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color: Colors.green),
-                    textAlign: TextAlign.center,)
+                ? Text(
+                    "Voir Cequ'il fait",
+                    style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green),
+                    textAlign: TextAlign.center,
+                  )
                 : widget.l.eng == 1
                     ? Text("See What He Is doing",
-                        style:
-                            TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color: Colors.green),
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green),
                         textAlign: TextAlign.center)
                     : widget.l.swa == 1
                         ? Text("Kuona Vyenye Anafanya",
                             style: TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.bold,color: Colors.green),
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green),
                             textAlign: TextAlign.center)
                         : Text("Kuraba ivyo Akora",
                             style: TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.bold,color: Colors.green),
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green),
                             textAlign: TextAlign.center),
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: MaterialButton(
-            splashColor:Colors.white,
+            splashColor: Colors.white,
             onPressed: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => Changer(
                             l: widget.l,
-                            nro:widget.numero,
-                            nrow:numero,
+                            nro: widget.numero,
+                            nrow: numero,
                           )));
             },
             child: widget.l.fra == 1
                 ? Text("Le Changer",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color: Colors.red),
+                    style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red),
                     textAlign: TextAlign.center)
                 : widget.l.eng == 1
                     ? Text("Change him",
-                        style:
-                            TextStyle(fontSize: 30, fontWeight: FontWeight.bold,color: Colors.red),
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red),
                         textAlign: TextAlign.center)
                     : widget.l.swa == 1
                         ? Text("Kumubadilisha",
                             style: TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.bold,color: Colors.red),
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red),
                             textAlign: TextAlign.center)
                         : Text("Kumuhindura",
                             style: TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.bold,color: Colors.red),
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red),
                             textAlign: TextAlign.center),
           ),
         ),
         MaterialButton(
-          splashColor:Colors.white,
+          splashColor: Colors.white,
           onPressed: () {
             Navigator.pop(context);
           },
@@ -307,7 +330,8 @@ return jsonDecode(body);
         });
     //return;
   }
-paspayemessage() {
+
+  paspayemessage() {
     AlertDialog alerte = new AlertDialog(
       backgroundColor: Colors.black,
       content: widget.l.fra == 1
@@ -316,8 +340,7 @@ paspayemessage() {
                   fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
               textAlign: TextAlign.center)
           : widget.l.eng == 1
-              ? Text(
-                  "Your Packet has Finished Do you want to pay once again ?",
+              ? Text("Your Packet has Finished Do you want to pay once again ?",
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -340,7 +363,7 @@ paspayemessage() {
                     ),
       actions: <Widget>[
         MaterialButton(
-          splashColor:Colors.white,
+          splashColor: Colors.white,
           onPressed: () {
             Navigator.pop(context);
           },
@@ -373,7 +396,7 @@ paspayemessage() {
                           textAlign: TextAlign.center),
         ),
         MaterialButton(
-          splashColor:Colors.white,
+          splashColor: Colors.white,
           onPressed: () {
             Navigator.pop(context);
             Navigator.pop(context);
@@ -422,6 +445,7 @@ paspayemessage() {
         });
     //return;
   }
+
   decrypterchaine(String value) {
     String chaine = "abcdefghi0123456789jklmnopkrstuvwxyz.";
     List<String> c = value.split(".");
@@ -443,21 +467,22 @@ paspayemessage() {
     }
     return n;
   }
-    changernumero(String value) {
+
+  changernumero(String value) {
     String chaine = "kdfabvxous";
-    String numero="";
+    String numero = "";
     for (int i = 0; i < value.length; i++) {
-     try{
-       if(value[i]!="."){
-      numero=numero+chaine[int.parse(value[i])];
-       }else{
-         numero=numero+"@";
-       }
-     }catch(e){
-     }
+      try {
+        if (value[i] != ".") {
+          numero = numero + chaine[int.parse(value[i])];
+        } else {
+          numero = numero + "@";
+        }
+      } catch (e) {}
     }
     return numero;
   }
+
   paspayemessageechec() {
     AlertDialog alerte = new AlertDialog(
       backgroundColor: Colors.black,
@@ -467,8 +492,7 @@ paspayemessage() {
                   fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
               textAlign: TextAlign.center)
           : widget.l.eng == 1
-              ? Text(
-                  "Sorry We have a problem,Retry Later",
+              ? Text("Sorry We have a problem,Retry Later",
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -490,9 +514,8 @@ paspayemessage() {
                       textAlign: TextAlign.center,
                     ),
       actions: <Widget>[
-       
         MaterialButton(
-          splashColor:Colors.white,
+          splashColor: Colors.white,
           onPressed: () {
             Navigator.pop(context);
           },
@@ -533,204 +556,229 @@ paspayemessage() {
         });
     //return;
   }
+
   @override
   Widget build(BuildContext context) {
-    return  Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            StreamBuilder<List>(
-                stream:_streamcontroller.stream,
-                builder: (context, snap) {
-                  if (snap.hasError) {
-                  } else if (snap.hasData) {
-                    return Expanded(
-                                          child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          width: 160,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                  child: Scrollbar(
-                                    child: ListView.builder(
-                                      controller: _scrollcontroller,
-                                      physics: BouncingScrollPhysics(),
-                                        itemCount:snap.data.length,
-                                        itemBuilder: (context, i) {
-                                          return InkWell(
-                                            splashColor:Colors.white,
-                                            onTap: () {
-                                              if (widget.duree >= 0) {
-                                                deleteData(
-                                                    changernumero(decrypterchaine(snap.data[i]['nro_w'])));
-                                                setState(() {
-                                                  numero = snap.data[i]['nro_w'];
-                                                });
-                                              } else {
-                                               if(widget.duree!=-1002){
-                                     paspayemessage();
-                                }else{
-                                     paspayemessageechec();
-                                }
-                                              }
-                                            },
-                                            child: Card(
-                                              color: Colors.black45,
-                                              shape: RoundedRectangleBorder(
-                                                  side: BorderSide(
-                                                      color: Colors.lightBlue, width: 2),
-                                                  borderRadius:
-                                                      BorderRadius.circular(15)),
-                                              child: Column(
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(8.0),
-                                                    child: Text(
-                                                      snap.data[i]['nom_w'],
-                                                      style: TextStyle(
-                                                        fontSize: 30,
-                                                          fontWeight: FontWeight.bold,
-                                                          color: Colors.white),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(8.0),
-                                                    child: Text(
-                                                      snap.data[i]['prenom_w'],
-                                                      style: TextStyle(
-                                                          fontWeight: FontWeight.bold,
-                                                          color: Colors.white,
-                                                          fontSize: 30,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(8.0),
-                                                    child: widget.l.fra == 1
-                                                        ? Text("Taper Pour Plus...",
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight.bold,
-                                                                color: Colors.white),textAlign: TextAlign.center,)
-                                                        : widget.l.eng == 1
-                                                            ? Text("Tap To See More...",
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight.bold,
-                                                                    color: Colors.white),textAlign: TextAlign.center,)
-                                                            : widget.l.swa == 1
-                                                                ? Text(
-                                                                    "Click Uone Mengi...",
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        color:
-                                                                            Colors.white),textAlign: TextAlign.center,)
-                                                                : Text(
-                                                                    "Vyonda Ubone Vyishi...",
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        color:
-                                                                            Colors.white),textAlign: TextAlign.center,),
-                                                  ),
-                                                ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        StreamBuilder<List>(
+            stream: _streamcontroller.stream,
+            builder: (context, snap) {
+              if (snap.hasError) {
+              } else if (snap.hasData) {
+                return Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: 160,
+                      child: Column(
+                        children: [
+                          Expanded(
+                              child: Scrollbar(
+                            child: ListView.builder(
+                                controller: _scrollcontroller,
+                                physics: BouncingScrollPhysics(),
+                                itemCount: snap.data.length,
+                                itemBuilder: (context, i) {
+                                  return InkWell(
+                                    splashColor: Colors.white,
+                                    onTap: () {
+                                      if (widget.duree >= 0) {
+                                        deleteData(changernumero(
+                                            decrypterchaine(
+                                                snap.data[i]['nro_w'])));
+                                        setState(() {
+                                          numero = snap.data[i]['nro_w'];
+                                        });
+                                      } else {
+                                        if (widget.duree != -1002) {
+                                          paspayemessage();
+                                        } else {
+                                          paspayemessageechec();
+                                        }
+                                      }
+                                    },
+                                    child: Card(
+                                      color: Colors.black45,
+                                      shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                              color: Colors.lightBlue,
+                                              width: 2),
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              snap.data[i]['nom_w'],
+                                              style: TextStyle(
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              snap.data[i]['prenom_w'],
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontSize: 30,
                                               ),
                                             ),
-                                          );
-                                        }),
-                                  )),
-                            ],
-                          ),
-                        ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: widget.l.fra == 1
+                                                ? Text(
+                                                    "Taper Pour Plus...",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white),
+                                                    textAlign: TextAlign.center,
+                                                  )
+                                                : widget.l.eng == 1
+                                                    ? Text(
+                                                        "Tap To See More...",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.white),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      )
+                                                    : widget.l.swa == 1
+                                                        ? Text(
+                                                            "Click Uone Mengi...",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .white),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          )
+                                                        : Text(
+                                                            "Vyonda Ubone Vyishi...",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .white),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }),
+                          )),
+                        ],
                       ),
-                    );
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(
-                          backgroundColor: Colors.transparent,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.black)),
-                    );
-                  }
-                  return null;
-                }),
-            Expanded(
-              child: ListView(
+                    ),
+                  ),
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(
+                      backgroundColor: Colors.transparent,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black)),
+                );
+              }
+              return null;
+            }),
+        Expanded(
+          child: ListView(
+            children: [
+              Column(
                 children: [
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: InkWell(
-                          splashColor:Colors.white,
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Ajouter(
-                                          l: widget.l,
-                                          numero: widget.numero,
-                                        )));
-                          },
-                          child: Container(
-                            width: 250,
-                            height: 60,
-                            color: Colors.lightBlueAccent,
-                            alignment: Alignment.center,
-                            child: widget.l.eng == 1
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      splashColor: Colors.white,
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Ajouter(
+                                      l: widget.l,
+                                      numero: widget.numero,
+                                    )));
+                      },
+                      child: Container(
+                        width: 250,
+                        height: 60,
+                        color: Colors.lightBlueAccent,
+                        alignment: Alignment.center,
+                        child: widget.l.eng == 1
+                            ? Text(
+                                'New Worker',
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : widget.l.swa == 1
                                 ? Text(
-                                    'New Worker',
+                                    'Mtumishi Wampya',
                                     style: TextStyle(
                                         fontSize: 25,
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
                                   )
-                                : widget.l.swa == 1
+                                : widget.l.fra == 1
                                     ? Text(
-                                        'Mtumishi Wampya',
+                                        'Nouveau travailleur',
                                         style: TextStyle(
                                             fontSize: 25,
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold),
                                       )
-                                    : widget.l.fra == 1
-                                        ? Text(
-                                            'Nouveau travailleur',
-                                            style: TextStyle(
-                                                fontSize: 25,
-                                                color: Colors.black,
-                                                fontWeight:
-                                                    FontWeight.bold),
-                                          )
-                                        : Text(
-                                            'Umukozi Mushasha',
-                                            style: TextStyle(
-                                                fontSize: 25,
-                                                color: Colors.black,
-                                                fontWeight:
-                                                    FontWeight.bold),
-                                          ),
-                          ),
-                        ),
+                                    : Text(
+                                        'Umukozi Mushasha',
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                       ),
-                      Padding(
-                          padding: const EdgeInsets.all(3),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    color: Colors.black26, width: 5),
-                                borderRadius: BorderRadius.circular(30)),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                widget.l.fra == 1
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.all(3),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.black26, width: 5),
+                            borderRadius: BorderRadius.circular(30)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            widget.l.fra == 1
+                                ? Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Si Vous Cliquez sur Un travaileur Soit Vous pouvez Voir Ceque il Fait Ou le Changer",
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  )
+                                : widget.l.eng == 1
                                     ? Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          "Si Vous Cliquez sur Un travaileur Soit Vous pouvez Voir Ceque il Fait Ou le Changer",
+                                          "If You Click On A Worker You Can See What He's Doing Or Change him ",
                                           style: TextStyle(
                                               fontSize: 25,
                                               fontWeight: FontWeight.bold,
@@ -738,67 +786,45 @@ paspayemessage() {
                                           textAlign: TextAlign.center,
                                         ),
                                       )
-                                    : widget.l.eng == 1
+                                    : widget.l.swa == 1
                                         ? Padding(
-                                            padding:
-                                                const EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(8.0),
                                             child: Text(
-                                              "If You Click On A Worker You Can See What He's Doing Or Change him ",
+                                              "Ukibonyeza Kwenye jina La Mtumishi Unaweza kuona Vyenye Anafanya na unaweza Mufukuza Kazini",
                                               style: TextStyle(
                                                   fontSize: 25,
-                                                  fontWeight:
-                                                      FontWeight.bold,
+                                                  fontWeight: FontWeight.bold,
                                                   color: Colors.red),
                                               textAlign: TextAlign.center,
                                             ),
                                           )
-                                        : widget.l.swa == 1
-                                            ? Padding(
-                                                padding:
-                                                    const EdgeInsets.all(
-                                                        8.0),
-                                                child: Text(
-                                                  "Ukibonyeza Kwenye jina La Mtumishi Unaweza kuona Vyenye Anafanya na unaweza Mufukuza Kazini",
-                                                  style: TextStyle(
-                                                      fontSize: 25,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.red),
-                                                  textAlign:
-                                                      TextAlign.center,
-                                                ),
-                                              )
-                                            : Padding(
-                                                padding:
-                                                    const EdgeInsets.all(
-                                                        8.0),
-                                                child: Text(
-                                                  "Muhisemwo umukozi Murutonde,Mushobora Kubona Ivyo akora Canke Mukamuhindura",
-                                                  style: TextStyle(
-                                                      fontSize: 25,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.red),
-                                                  textAlign:
-                                                      TextAlign.center,
-                                                ),
-                                              ),
-                                Padding(
-                                  padding: const EdgeInsets.all(2),
-                                  child: Icon(
-                                    Icons.warning,
-                                    color: Colors.black,
-                                  ),
-                                )
-                              ],
-                            ),
-                          )),
-                    ],
-                  ),
+                                        : Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              "Muhisemwo umukozi Murutonde,Mushobora Kubona Ivyo akora Canke Mukamuhindura",
+                                              style: TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.red),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                            Padding(
+                              padding: const EdgeInsets.all(2),
+                              child: Icon(
+                                Icons.warning,
+                                color: Colors.black,
+                              ),
+                            )
+                          ],
+                        ),
+                      )),
                 ],
               ),
-            ),
-          ],
-        );
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

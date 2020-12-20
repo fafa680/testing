@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kakwetu/page3.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
+
 class Changer extends StatefulWidget {
   final Langue l;
   final String nro;
@@ -20,7 +21,7 @@ class _ChangerState extends State<Changer> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-        backgroundColor: Colors.black,
+          backgroundColor: Colors.black,
           title: Text(
             "Kakwetu",
             style: TextStyle(
@@ -106,24 +107,26 @@ class _MyformState extends State<Myform> {
   TextEditingController confp = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool isobscure = true;
-   FocusNode focusnode;
-    FocusNode focusnode1;
-   @override
+  FocusNode focusnode;
+  FocusNode focusnode1;
+  @override
   void initState() {
-   focusnode=FocusNode();
-    focusnode1=FocusNode();
-    focusnode.addListener(() { });
-    focusnode1.addListener(() { });
+    focusnode = FocusNode();
+    focusnode1 = FocusNode();
+    focusnode.addListener(() {});
+    focusnode1.addListener(() {});
     super.initState();
   }
-     dismisskeyboard(){
-  focusnode.unfocus();
-   focusnode1.unfocus();
-}
+
+  dismisskeyboard() {
+    focusnode.unfocus();
+    focusnode1.unfocus();
+  }
+
   @override
   void dispose() {
-focusnode.dispose();
-focusnode1.dispose();
+    focusnode.dispose();
+    focusnode1.dispose();
     newp.dispose();
     confp.dispose();
     super.dispose();
@@ -186,60 +189,60 @@ focusnode1.dispose();
 
   bool ispop = true;
   bool visible1 = false;
-  updateworkerpassBoss(){
+  updateworkerpassBoss() {
     setState(() {
       ispop = false;
       visible1 = true;
     });
     try {
-      if ((testPass()>0)&&(newp.text.length>=6)) {
-     http.post(
+      if ((testPass() > 0) && (newp.text.length >= 6)) {
+        http.post(
             "https://kakwetuburundifafanini.com/update/updateworkerpassBoss.php",
             body: {
-              "etat":"changed",
+              "etat": "changed",
               "nro": widget.nro,
               "nro_w": widget.nrow,
               "pd": crypterchaine(newp.text.trim().replaceAll(' ', '')),
-            }).then((value){
-              if(value.statusCode==200){
-                 setState(() {
-            ispop = true;
-            visible1 = false;
-            Fluttertoast.showToast(
-                msg: widget.l.fra == 1
-                    ? "Bien Fait"
-                    : widget.l.eng == 1
-                        ? "Well Done"
-                        : widget.l.swa == 1
-                            ? "Umeweza"
-                            : "Vyakunze",
-                backgroundColor: Colors.black,
-                gravity: ToastGravity.CENTER,
-                toastLength: Toast.LENGTH_LONG);
-            Navigator.pop(context);
-            Navigator.pop(context);
-          });
-              }else{
-setState(() {
-          ispop = true;
-          visible1 = false;
-          Fluttertoast.showToast(
-              msg: widget.l.fra == 1
-                  ? "Echec"
-                  : widget.l.eng == 1
-                      ? "Failure"
-                      : widget.l.swa == 1
-                          ? "Binakatala"
-                          : "Vyase",
-              backgroundColor: Colors.red,
-              gravity: ToastGravity.CENTER,
-              toastLength: Toast.LENGTH_LONG);
-        });
-              }
+            }).then((value) {
+          if (value.statusCode == 200) {
+            setState(() {
+              ispop = true;
+              visible1 = false;
+              Fluttertoast.showToast(
+                  msg: widget.l.fra == 1
+                      ? "Bien Fait"
+                      : widget.l.eng == 1
+                          ? "Well Done"
+                          : widget.l.swa == 1
+                              ? "Umeweza"
+                              : "Vyakunze",
+                  backgroundColor: Colors.black,
+                  gravity: ToastGravity.CENTER,
+                  toastLength: Toast.LENGTH_LONG);
+              Navigator.pop(context);
+              Navigator.pop(context);
             });
-          setState(() {
-         newp.text="";
-         confp.text="";
+          } else {
+            setState(() {
+              ispop = true;
+              visible1 = false;
+              Fluttertoast.showToast(
+                  msg: widget.l.fra == 1
+                      ? "Echec"
+                      : widget.l.eng == 1
+                          ? "Failure"
+                          : widget.l.swa == 1
+                              ? "Binakatala"
+                              : "Vyase",
+                  backgroundColor: Colors.red,
+                  gravity: ToastGravity.CENTER,
+                  toastLength: Toast.LENGTH_LONG);
+            });
+          }
+        });
+        setState(() {
+          newp.text = "";
+          confp.text = "";
         });
       } else {
         setState(() {
@@ -354,10 +357,12 @@ setState(() {
                           child: Padding(
                             padding: const EdgeInsets.all(3.0),
                             child: TextFormField(
+                              enableInteractiveSelection: false,
                               focusNode: focusnode,
                               inputFormatters: [
-                                    new FilteringTextInputFormatter.deny(RegExp("[#*'\"/&();=|@]"))
-                                                                 ],
+                                new FilteringTextInputFormatter.deny(
+                                    RegExp("[#*'\"/&();=|@]"))
+                              ],
                               controller: newp,
                               style: TextStyle(
                                   fontSize: 20,
@@ -432,10 +437,12 @@ setState(() {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
+                            enableInteractiveSelection: false,
                             focusNode: focusnode1,
                             inputFormatters: [
-                                    new FilteringTextInputFormatter.deny(RegExp("[#*'\"/&();=|@]"))
-                                                                 ],
+                              new FilteringTextInputFormatter.deny(
+                                  RegExp("[#*'\"/&();=|@]"))
+                            ],
                             controller: confp,
                             style: TextStyle(
                                 fontSize: 20,
@@ -446,12 +453,12 @@ setState(() {
                             maxLength: 15,
                             decoration: InputDecoration(
                                 labelText: widget.l.fra == 1
-                                    ? "Cofirmez"
+                                    ? "Cofirmer"
                                     : widget.l.eng == 1
                                         ? "Conform"
                                         : widget.l.swa == 1
                                             ? "Thibitisha"
-                                            : "Subiramwo",
+                                            : "Risubiremwo",
                                 border: OutlineInputBorder(),
                                 labelStyle: TextStyle(
                                     color: Colors.white60,
@@ -484,7 +491,7 @@ setState(() {
                           height: 10,
                         ),
                         InkWell(
-                          splashColor:Colors.white,
+                          splashColor: Colors.white,
                           onTap: () {
                             if (_formKey.currentState.validate()) {
                               dismisskeyboard();

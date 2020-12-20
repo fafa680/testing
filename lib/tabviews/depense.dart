@@ -38,27 +38,29 @@ class _DepenseState extends State<Depense> {
   StreamController<List> _streamcontroller1 = StreamController<List>();
   ScrollController _scrollcontroller = new ScrollController();
   bool ispop = true;
-   FocusNode focusnode;
+  FocusNode focusnode;
   FocusNode focusnode1;
   @override
   void initState() {
-    focusnode=FocusNode();
-    focusnode1=FocusNode();
-    focusnode.addListener(() { });
-    focusnode1.addListener(() { });
+    focusnode = FocusNode();
+    focusnode1 = FocusNode();
+    focusnode.addListener(() {});
+    focusnode1.addListener(() {});
     selectdepense();
-    _timer = Timer.periodic(const Duration(seconds:5), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       selectdepense();
     });
     super.initState();
   }
- dismisskeyboard(){
-  focusnode.unfocus();
-  focusnode1.unfocus();
-}
+
+  dismisskeyboard() {
+    focusnode.unfocus();
+    focusnode1.unfocus();
+  }
+
   @override
   void dispose() {
-     focusnode.dispose();
+    focusnode.dispose();
     focusnode1.dispose();
     _scrollcontroller.dispose();
     _streamcontroller1.close();
@@ -71,25 +73,25 @@ class _DepenseState extends State<Depense> {
   bool update = true;
   final _formKey = GlobalKey<FormState>();
   Timer _timer;
-  static _isolate(String body){
-return jsonDecode(body);
+  static _isolate(String body) {
+    return jsonDecode(body);
   }
-selectdepense() async {
+
+  selectdepense() async {
     try {
       final response = await http.post(
           "https://kakwetuburundifafanini.com/get/selectdepense.php",
           body: {
             "nro": widget.numero,
           });
-          var resultat=await compute(_isolate,response.body);
-     setState(() {
-               _streamcontroller1.add(resultat);
+      var resultat = await compute(_isolate, response.body);
+      setState(() {
+        _streamcontroller1.add(resultat);
       });
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
-adddepense(){
+  adddepense() {
     setState(() {
       visible1 = true;
     });
@@ -100,32 +102,32 @@ adddepense(){
               "sorte": nom.text.trim().replaceAll(' ', ''),
               "nro": widget.numero,
               "sme": montant.text.trim().replaceAll(' ', ''),
-            }).then((value){
-          if(value.statusCode==200){
-             Fluttertoast.showToast(
-              msg: widget.l.fra == 1
-                  ? "Bien Fait"
-                  : widget.l.eng == 1
-                      ? "Done"
-                      : widget.l.swa == 1
-                          ? "Umeweza"
-                          : "Vyakunze",
-              backgroundColor: Colors.black,
-              gravity: ToastGravity.CENTER,
-              toastLength: Toast.LENGTH_LONG);
-              selectdepense();
-          }else{
+            }).then((value) {
+          if (value.statusCode == 200) {
             Fluttertoast.showToast(
-              msg: widget.l.fra == 1
-                  ? "Operation Echouée"
-                  : widget.l.eng == 1
-                      ? "Failed"
-                      : widget.l.swa == 1
-                          ? "Bimekatala"
-                          : "Ntivyakunze",
-              backgroundColor: Colors.red,
-              gravity: ToastGravity.CENTER,
-              toastLength: Toast.LENGTH_LONG);
+                msg: widget.l.fra == 1
+                    ? "Bien Fait"
+                    : widget.l.eng == 1
+                        ? "Done"
+                        : widget.l.swa == 1
+                            ? "Umeweza"
+                            : "Vyakunze",
+                backgroundColor: Colors.black,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
+            selectdepense();
+          } else {
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Operation Echouée"
+                    : widget.l.eng == 1
+                        ? "Failed"
+                        : widget.l.swa == 1
+                            ? "Bimekatala"
+                            : "Ntivyakunze",
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
           }
         });
         setState(() {
@@ -494,7 +496,7 @@ adddepense(){
                     });
                   }
                 } else {
-                adddepense();
+                  adddepense();
                 }
               } else {
                 Fluttertoast.showToast(
@@ -595,9 +597,6 @@ adddepense(){
       actions: <Widget>[
         MaterialButton(
           onPressed: () {
-            setState(() {
-              ispop = true;
-            });
             Navigator.pop(context);
           },
           child: widget.l.fra == 1
@@ -630,9 +629,6 @@ adddepense(){
         ),
         MaterialButton(
           onPressed: () {
-            setState(() {
-              ispop = true;
-            });
             Navigator.pop(context);
             Navigator.pop(context);
           },
@@ -684,8 +680,10 @@ adddepense(){
       onWillPop: () {
         if (ispop) {
           messagevalidation1();
+        } else {
+          return _willpop();
         }
-        return _willpop();
+        return null;
       },
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -708,8 +706,7 @@ adddepense(){
                               child: ListView.builder(
                                   controller: _scrollcontroller,
                                   physics: BouncingScrollPhysics(),
-                                  itemCount:
-                                      snap.data.length,
+                                  itemCount: snap.data.length,
                                   itemBuilder: (context, i) {
                                     return InkWell(
                                       child: Card(
@@ -726,7 +723,8 @@ adddepense(){
                                                 padding:
                                                     const EdgeInsets.all(8.0),
                                                 child: widget.l.fra == 1
-                                                    ? snap.data[i]['jour'].toString() ==
+                                                    ? snap.data[i]['jour']
+                                                                .toString() ==
                                                             '1'
                                                         ? Text(
                                                             "Dimanche le " +
@@ -741,10 +739,7 @@ adddepense(){
                                                         : snap.data[i]['jour']
                                                                     .toString() ==
                                                                 '2'
-                                                            ? Text(
-                                                                "Lundi le " +
-                                                                    snap.data[i]
-                                                                        ['dat'],
+                                                            ? Text("Lundi le " + snap.data[i]['dat'],
                                                                 style: TextStyle(
                                                                     fontWeight:
                                                                         FontWeight.bold,

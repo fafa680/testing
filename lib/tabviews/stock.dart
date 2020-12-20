@@ -7,6 +7,7 @@ import 'package:kakwetu/page3.dart';
 import 'package:http/http.dart' as http;
 import '../servicepayement.dart';
 import 'package:flutter/foundation.dart';
+
 class Stock extends StatefulWidget {
   final Langue l;
   final int isboss;
@@ -46,20 +47,22 @@ class _StockState extends State<Stock> {
   FocusNode focusnode1;
   @override
   void initState() {
-    focusnode=FocusNode();
-    focusnode1=FocusNode();
-    focusnode.addListener(() { });
-    focusnode1.addListener(() { });
+    focusnode = FocusNode();
+    focusnode1 = FocusNode();
+    focusnode.addListener(() {});
+    focusnode1.addListener(() {});
     selectstock();
-_timer = Timer.periodic(const Duration(seconds:5), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       selectstock();
     });
     super.initState();
   }
-   dismisskeyboard(){
-  focusnode.unfocus();
-  focusnode1.unfocus();
-}
+
+  dismisskeyboard() {
+    focusnode.unfocus();
+    focusnode1.unfocus();
+  }
+
   @override
   void dispose() {
     focusnode.dispose();
@@ -78,7 +81,7 @@ _timer = Timer.periodic(const Duration(seconds:5), (timer) {
 
   final noms = [];
   var stock = [];
- firstcheckproductt(){
+  firstcheckproductt() {
     setState(() {
       ispop = false;
       visible1 = true;
@@ -92,35 +95,35 @@ _timer = Timer.periodic(const Duration(seconds:5), (timer) {
               "nro": widget.numero,
               "q_encien": qte.text.replaceAll(' ', '').trim(),
               "q_recent": qte.text.replaceAll(' ', '').trim(),
-            }).then((value){
-          if(value.statusCode==200){
-             Fluttertoast.showToast(
-              msg: widget.l.fra == 1
-                  ? "Bien Fait"
-                  : widget.l.eng == 1
-                      ? "Done"
-                      : widget.l.swa == 1
-                          ? "Umeweza"
-                          : "Vyakunze",
-              backgroundColor: Colors.black,
-              gravity: ToastGravity.CENTER,
-              toastLength: Toast.LENGTH_LONG);
-              selectstock();
-          }else{
+            }).then((value) {
+          if (value.statusCode == 200) {
             Fluttertoast.showToast(
-              msg: widget.l.fra == 1
-                  ? "Operation Echouée"
-                  : widget.l.eng == 1
-                      ? "Failed"
-                      : widget.l.swa == 1
-                          ? "Bimekatala"
-                          : "Ntivyakunze",
-              backgroundColor: Colors.red,
-              gravity: ToastGravity.CENTER,
-              toastLength: Toast.LENGTH_LONG);
+                msg: widget.l.fra == 1
+                    ? "Bien Fait"
+                    : widget.l.eng == 1
+                        ? "Done"
+                        : widget.l.swa == 1
+                            ? "Umeweza"
+                            : "Vyakunze",
+                backgroundColor: Colors.black,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
+            selectstock();
+          } else {
+            Fluttertoast.showToast(
+                msg: widget.l.fra == 1
+                    ? "Operation Echouée"
+                    : widget.l.eng == 1
+                        ? "Failed"
+                        : widget.l.swa == 1
+                            ? "Bimekatala"
+                            : "Ntivyakunze",
+                backgroundColor: Colors.red,
+                gravity: ToastGravity.CENTER,
+                toastLength: Toast.LENGTH_LONG);
           }
         });
-         setState(() {
+        setState(() {
           referance.text = "";
           qte.text = "";
           name.text = "";
@@ -172,10 +175,10 @@ _timer = Timer.periodic(const Duration(seconds:5), (timer) {
           .post("https://kakwetuburundifafanini.com/gs/selectstock.php", body: {
         "nro": widget.numero,
       });
-    var resultat=await compute(_isolate,response.body);
+      var resultat = await compute(_isolate, response.body);
       setState(() {
-            _streamcontroller1.add(resultat);
-        stock =resultat;
+        _streamcontroller1.add(resultat);
+        stock = resultat;
       });
     } catch (e) {
       setState(() {
@@ -183,11 +186,13 @@ _timer = Timer.periodic(const Duration(seconds:5), (timer) {
       });
     }
   }
-     static _isolate(String body){
-return jsonDecode(body);
+
+  static _isolate(String body) {
+    return jsonDecode(body);
   }
+
   bool visible1 = false;
-  deleteproduct(String nom){
+  deleteproduct(String nom) {
     setState(() {
       ispop = false;
     });
@@ -290,8 +295,7 @@ return jsonDecode(body);
                   fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
               textAlign: TextAlign.center)
           : widget.l.eng == 1
-              ? Text(
-                  "Your Packet has Finished Do you want to pay once again ?",
+              ? Text("Your Packet has Finished Do you want to pay once again ?",
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -518,7 +522,7 @@ return jsonDecode(body);
                     });
                   }
                 } else {
-                firstcheckproductt();
+                  firstcheckproductt();
                 }
               } else {
                 Fluttertoast.showToast(
@@ -589,7 +593,7 @@ return jsonDecode(body);
     //return;
   }
 
-  void messagevalidersuppression(String nom, String stock1,int i) {
+  void messagevalidersuppression(String nom, String stock1, int i) {
     AlertDialog alerte = new AlertDialog(
       backgroundColor: Colors.black,
       content: widget.l.fra == 1
@@ -730,7 +734,7 @@ return jsonDecode(body);
 
   _scrolldown() {
     _scrollcontroller.animateTo(_scrollcontroller.position.maxScrollExtent,
-        duration: Duration(seconds: stock.isEmpty ? 1 :(stock.length*2)),
+        duration: Duration(seconds: stock.isEmpty ? 1 : (stock.length * 2)),
         curve: Curves.easeOut);
     setState(() {
       _isontop = false;
@@ -771,9 +775,6 @@ return jsonDecode(body);
       actions: <Widget>[
         MaterialButton(
           onPressed: () {
-            setState(() {
-              ispop = true;
-            });
             Navigator.pop(context);
           },
           child: widget.l.fra == 1
@@ -806,9 +807,6 @@ return jsonDecode(body);
         ),
         MaterialButton(
           onPressed: () {
-            setState(() {
-              ispop = true;
-            });
             Navigator.pop(context);
             Navigator.pop(context);
           },
@@ -860,8 +858,10 @@ return jsonDecode(body);
       onWillPop: () {
         if (ispop) {
           messagevalidation1();
+        } else {
+          return _willpop();
         }
-        return _willpop();
+        return null;
       },
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -964,7 +964,7 @@ return jsonDecode(body);
                               child: ListView.builder(
                                   controller: _scrollcontroller,
                                   physics: BouncingScrollPhysics(),
-                                  itemCount:snap.data.length,
+                                  itemCount: snap.data.length,
                                   itemBuilder: (context, i) {
                                     return InkWell(
                                       splashColor: Colors.white,
@@ -987,7 +987,8 @@ return jsonDecode(body);
                                             (delet == false)) {
                                           if (name.text.isEmpty) {
                                             setState(() {
-                                              referance.text = snap.data[i]['nom'];
+                                              referance.text =
+                                                  snap.data[i]['nom'];
                                               name.text = snap.data[i]['nom'];
                                             });
                                           } else {
@@ -1032,7 +1033,8 @@ return jsonDecode(body);
                                               child: widget.l.fra == 1
                                                   ? Text(
                                                       "Stock: " +
-                                                          snap.data[i]['q_encien'],
+                                                          snap.data[i]
+                                                              ['q_encien'],
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
@@ -1092,13 +1094,11 @@ return jsonDecode(body);
                                                                 snap.data[i][
                                                                     'q_recent'],
                                                             style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
+                                                                fontWeight: FontWeight
+                                                                    .bold,
                                                                 color: Colors
                                                                     .white))
-                                                        : snap.data[i]['jour']
-                                                                    .toString() ==
+                                                        : snap.data[i]['jour'].toString() ==
                                                                 '2'
                                                             ? Text(
                                                                 "stock Recent Lundi le " +
@@ -1171,9 +1171,10 @@ return jsonDecode(body);
                                                     onPressed: () {
                                                       messagevalidersuppression(
                                                           snap.data[i]['nom'],
-                                                          snap.data[i]['q_encien'],i); 
-                                                    }
-                                                    ),
+                                                          snap.data[i]
+                                                              ['q_encien'],
+                                                          i);
+                                                    }),
                                               ),
                                             )
                                           ],
@@ -1304,8 +1305,9 @@ return jsonDecode(body);
                                   child: TextFormField(
                                     focusNode: focusnode1,
                                     inputFormatters: [
-                                    new FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z.,-/]"))
-                                                                 ],
+                                      new FilteringTextInputFormatter.allow(
+                                          RegExp("[0-9a-zA-Z.,-/]"))
+                                    ],
                                     enabled:
                                         referance.text.isEmpty ? true : false,
                                     autofocus: true,
@@ -1351,12 +1353,13 @@ return jsonDecode(body);
                                   padding: const EdgeInsets.all(2),
                                   child: TextFormField(
                                     controller: qte,
-                                         focusNode: focusnode,
+                                    focusNode: focusnode,
                                     keyboardType:
                                         TextInputType.numberWithOptions(),
-                                        inputFormatters: [
-                                    new FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
-                                  ],
+                                    inputFormatters: [
+                                      new FilteringTextInputFormatter.allow(
+                                          RegExp("[0-9.]"))
+                                    ],
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.center,
@@ -1640,9 +1643,8 @@ class DataSearch2 extends SearchDelegate<String> {
                 element['nom']
                     .toString()
                     .toUpperCase()
-                    .contains(query.toUpperCase())||element['dat']
-                    .toString()
-                    .contains(query))
+                    .contains(query.toUpperCase()) ||
+                element['dat'].toString().contains(query))
             .toList();
     return Scaffold(
       body: Column(
@@ -1743,7 +1745,7 @@ class DataSearch2 extends SearchDelegate<String> {
                                 ),
                                 title: RichText(
                                   text: TextSpan(
-                                      text:sugest[index]['nom']
+                                      text: sugest[index]['nom']
                                           .substring(0, query.length),
                                       style: TextStyle(
                                           color: Colors.red,
@@ -1751,7 +1753,7 @@ class DataSearch2 extends SearchDelegate<String> {
                                           fontSize: 30),
                                       children: [
                                         TextSpan(
-                                            text:sugest[index]['nom']
+                                            text: sugest[index]['nom']
                                                 .substring(query.length),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
